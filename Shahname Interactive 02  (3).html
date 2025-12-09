@@ -1,0 +1,1740 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>افسانه‌های شاهنامه - بازی نقش‌آفرینی</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a2a, #1a1a4a);
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        #game-container {
+            position: relative;
+            width: 900px;
+            height: 600px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(139, 69, 19, 0.7);
+            background: #000;
+        }
+        
+        #game-canvas {
+            display: block;
+            background: linear-gradient(to bottom, #1e3c72, #2a5298);
+        }
+        
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(10, 10, 42, 0.95), rgba(42, 82, 152, 0.9));
+            z-index: 20;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .title {
+            font-size: 48px;
+            color: #ffcc00;
+            text-shadow: 4px 4px 0 #8B4513, 0 0 20px rgba(255, 204, 0, 0.7);
+            margin-bottom: 20px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        
+        .subtitle {
+            font-size: 22px;
+            color: #fff;
+            margin-bottom: 40px;
+            max-width: 600px;
+            line-height: 1.6;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 320px;
+        }
+        
+        .menu-btn {
+            padding: 16px 24px;
+            background: linear-gradient(to bottom, #8B4513, #A0522D);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            box-shadow: 0 4px 0 #5D2906, 0 6px 10px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .menu-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 0 #5D2906, 0 8px 15px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(to bottom, #A0522D, #8B4513);
+        }
+        
+        .menu-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 0 #5D2906, 0 3px 5px rgba(0, 0, 0, 0.4);
+        }
+        
+        .menu-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(255,255,255,0.1), transparent);
+            pointer-events: none;
+        }
+        
+        .hud {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: 2px solid #8B4513;
+            box-shadow: 0 0 15px rgba(139, 69, 19, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .health-container, .mana-container {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .health-bar, .mana-bar {
+            width: 200px;
+            height: 20px;
+            background-color: #333;
+            border-radius: 10px;
+            border: 2px solid #fff;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .health-fill {
+            height: 100%;
+            background: linear-gradient(to right, #ff3333, #ff6666);
+            width: 100%;
+            border-radius: 8px;
+            transition: width 0.5s;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+        
+        .mana-fill {
+            height: 100%;
+            background: linear-gradient(to right, #3366ff, #6699ff);
+            width: 100%;
+            border-radius: 8px;
+            transition: width 0.5s;
+            box-shadow: 0 0 10px rgba(51, 102, 255, 0.5);
+        }
+        
+        .health-text, .mana-text {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-weight: bold;
+            font-size: 14px;
+            text-shadow: 1px 1px 2px #000;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(139, 69, 19, 0.3);
+            padding: 8px 12px;
+            border-radius: 8px;
+            min-width: 70px;
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            color: #ffcc00;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px #000;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #ccc;
+        }
+        
+        .dialog-box {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.85);
+            border: 3px solid #8B4513;
+            border-radius: 12px;
+            padding: 20px;
+            z-index: 15;
+            box-shadow: 0 0 25px rgba(139, 69, 19, 0.7);
+            backdrop-filter: blur(5px);
+            transform: translateY(120%);
+            transition: transform 0.5s;
+        }
+        
+        .dialog-box.active {
+            transform: translateY(0);
+        }
+        
+        .dialog-character {
+            font-size: 22px;
+            color: #ffcc00;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .dialog-text {
+            color: #fff;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .dialog-continue {
+            text-align: center;
+            color: #ffcc00;
+            font-size: 16px;
+            animation: blink 1.5s infinite;
+            font-weight: bold;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        #loading-bar {
+            width: 400px;
+            height: 25px;
+            background-color: #333;
+            border-radius: 12px;
+            border: 2px solid #8B4513;
+            margin-top: 30px;
+            overflow: hidden;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        #loading-progress {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #8B4513, #A0522D, #CD853F);
+            border-radius: 10px;
+            transition: width 0.3s;
+            box-shadow: 0 0 10px rgba(139, 69, 19, 0.7);
+        }
+        
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 5;
+        }
+        
+        .control-btn {
+            padding: 10px 15px;
+            background: rgba(139, 69, 19, 0.7);
+            border: 2px solid #A0522D;
+            border-radius: 8px;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .control-btn:hover {
+            background: rgba(160, 82, 45, 0.9);
+            transform: translateY(-2px);
+        }
+        
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            z-index: 5;
+        }
+        
+        .floating-text {
+            position: absolute;
+            color: #ffcc00;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            pointer-events: none;
+            z-index: 6;
+            animation: floatUp 1.5s forwards;
+        }
+        
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+        }
+        
+        .mini-map {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 150px;
+            height: 100px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #8B4513;
+            border-radius: 8px;
+            z-index: 5;
+            backdrop-filter: blur(3px);
+        }
+        
+        .level-indicator {
+            position: absolute;
+            top: 130px;
+            right: 20px;
+            background: rgba(139, 69, 19, 0.7);
+            padding: 8px 15px;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: bold;
+            z-index: 5;
+            border: 2px solid #A0522D;
+        }
+        
+        .quest-indicator {
+            position: absolute;
+            top: 170px;
+            right: 20px;
+            background: rgba(51, 102, 255, 0.7);
+            padding: 8px 15px;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: bold;
+            z-index: 5;
+            border: 2px solid #6699ff;
+            max-width: 150px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="game-canvas" width="900" height="600"></canvas>
+        
+        <!-- HUD -->
+        <div class="hud">
+            <div class="player-info">
+                <div class="health-container">
+                    <div class="health-bar">
+                        <div class="health-fill" id="health-fill"></div>
+                        <div class="health-text" id="health-text">۱۰۰/۱۰۰</div>
+                    </div>
+                    <div class="stat-label">سلامتی</div>
+                </div>
+                <div class="mana-container">
+                    <div class="mana-bar">
+                        <div class="mana-fill" id="mana-fill"></div>
+                        <div class="mana-text" id="mana-text">۱۰۰/۱۰۰</div>
+                    </div>
+                    <div class="stat-label">انرژی</div>
+                </div>
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value" id="strength-value">۱۵</div>
+                    <div class="stat-label">قدرت</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="wisdom-value">۱۲</div>
+                    <div class="stat-label">دانش</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="level-value">۱</div>
+                    <div class="stat-label">سطح</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="score-value">۰</div>
+                    <div class="stat-label">امتیاز</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mini Map -->
+        <div class="mini-map" id="mini-map"></div>
+        
+        <!-- Level Indicator -->
+        <div class="level-indicator" id="level-indicator">منطقه: جنگل افسانه‌ای</div>
+        
+        <!-- Quest Indicator -->
+        <div class="quest-indicator" id="quest-indicator">ماموریت: شکست دادن سربازان ضحاک</div>
+        
+        <!-- Dialog Box -->
+        <div class="dialog-box" id="dialog-box">
+            <div class="dialog-character" id="dialog-character">رستم</div>
+            <div class="dialog-text" id="dialog-text"></div>
+            <div class="dialog-continue">برای ادامه کلیک کنید</div>
+        </div>
+        
+        <!-- Controls -->
+        <div class="controls">
+            <button class="control-btn" id="save-btn">ذخیره</button>
+            <button class="control-btn" id="menu-btn">منو</button>
+            <button class="control-btn" id="sound-btn">صدا: روشن</button>
+        </div>
+        
+        <!-- Start Screen -->
+        <div id="start-screen" class="screen">
+            <h1 class="title">افسانه‌های شاهنامه</h1>
+            <p class="subtitle">در نقش رستم، قهرمان افسانه‌ای ایران، به ماجراجویی بپردازید و در نبردی حماسی علیه ضحاک، پادشاه ظالم، بجنگید.</p>
+            <div class="menu">
+                <button class="menu-btn" id="start-btn">شروع بازی جدید</button>
+                <button class="menu-btn" id="continue-btn">ادامه بازی</button>
+                <button class="menu-btn" id="instructions-btn">آموزش بازی</button>
+                <button class="menu-btn" id="credits-btn">سازندگان</button>
+            </div>
+        </div>
+        
+        <!-- Loading Screen -->
+        <div id="loading-screen" class="screen hidden">
+            <h1 class="title">در حال بارگذاری جهان افسانه‌ای</h1>
+            <p class="subtitle">لطفاً منتظر بمانید...</p>
+            <div id="loading-bar">
+                <div id="loading-progress"></div>
+            </div>
+        </div>
+        
+        <!-- Game Over Screen -->
+        <div id="game-over-screen" class="screen hidden">
+            <h1 class="title" id="game-over-title">پایان بازی</h1>
+            <p class="subtitle" id="game-over-text">شما شکست خوردید</p>
+            <div class="menu">
+                <button class="menu-btn" id="restart-btn">شروع مجدد</button>
+                <button class="menu-btn" id="main-menu-btn">منوی اصلی</button>
+            </div>
+        </div>
+        
+        <!-- Credits Screen -->
+        <div id="credits-screen" class="screen hidden">
+            <h1 class="title">سازندگان</h1>
+            <div class="subtitle">
+                <p>بر اساس شاهنامه فردوسی</p>
+                <p>توسعه‌دهنده: تیم شاهنامه</p>
+                <p>طراحی: حسام‌الدین</p>
+                <p>موسیقی: امیرحسین</p>
+                <p>صداگذاری: نیما</p>
+                <p>© 2023 افسانه‌های شاهنامه. تمامی حقوق محفوظ است.</p>
+            </div>
+            <div class="menu">
+                <button class="menu-btn" id="back-btn">بازگشت</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game variables
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Enhanced game state
+        let gameState = {
+            currentScreen: 'start',
+            player: {
+                x: 100,
+                y: 400,
+                width: 40,
+                height: 60,
+                speed: 6,
+                jumpForce: 16,
+                velocityY: 0,
+                isJumping: false,
+                health: 100,
+                maxHealth: 100,
+                mana: 100,
+                maxMana: 100,
+                strength: 15,
+                wisdom: 12,
+                level: 1,
+                experience: 0,
+                expToNextLevel: 100,
+                direction: 1,
+                attacking: false,
+                attackCooldown: 0,
+                specialAttacking: false,
+                specialCooldown: 0,
+                inventory: [],
+                gold: 0
+            },
+            keys: {},
+            platforms: [],
+            enemies: [],
+            items: [],
+            particles: [],
+            floatingTexts: [],
+            camera: {
+                x: 0,
+                y: 0
+            },
+            gravity: 0.8,
+            gameTime: 0,
+            score: 0,
+            currentLevel: 1,
+            dialogActive: false,
+            dialogCharacter: '',
+            dialogText: '',
+            dialogCallback: null,
+            soundEnabled: true,
+            backgroundMusic: null,
+            quests: {
+                main: {
+                    title: "شکست دادن سربازان ضحاک",
+                    description: "5 سرباز دشمن را شکست دهید",
+                    target: 5,
+                    progress: 0,
+                    completed: false
+                }
+            }
+        };
+
+        // Initialize the game when the page loads
+        window.addEventListener('load', () => {
+            // Set up event listeners for buttons
+            setupEventListeners();
+            
+            // Create background music
+            createBackgroundMusic();
+        });
+
+        // Create background music
+        function createBackgroundMusic() {
+            // In a real game, you would use actual audio files
+            // For this demo, we'll simulate music with the Web Audio API
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Create a simple oscillator for background music
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(220, audioContext.currentTime);
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                
+                // We won't start the oscillator automatically to respect autoplay policies
+                gameState.backgroundMusic = {
+                    context: audioContext,
+                    oscillator: oscillator,
+                    gainNode: gainNode
+                };
+            } catch (e) {
+                console.log("Audio context not supported");
+            }
+        }
+
+        // Play background music
+        function playBackgroundMusic() {
+            if (gameState.soundEnabled && gameState.backgroundMusic) {
+                try {
+                    gameState.backgroundMusic.oscillator.start();
+                } catch (e) {
+                    // Music already playing or context suspended
+                }
+            }
+        }
+
+        // Stop background music
+        function stopBackgroundMusic() {
+            if (gameState.backgroundMusic) {
+                gameState.backgroundMusic.oscillator.stop();
+            }
+        }
+
+        // Load game assets
+        function loadAssets() {
+            // Show loading screen
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('loading-screen').classList.remove('hidden');
+            
+            // Simulate loading progress
+            let progress = 0;
+            const loadingInterval = setInterval(() => {
+                progress += 2;
+                document.getElementById('loading-progress').style.width = `${progress}%`;
+                
+                if (progress >= 100) {
+                    clearInterval(loadingInterval);
+                    setTimeout(() => {
+                        document.getElementById('loading-screen').classList.add('hidden');
+                        initGame();
+                    }, 500);
+                }
+            }, 50);
+        }
+
+        // Initialize the game
+        function initGame() {
+            // Create level
+            createLevel();
+            
+            // Start background music
+            playBackgroundMusic();
+            
+            // Set up game loop
+            gameLoop();
+            
+            // Show initial dialog
+            showDialog('رستم', 'به بازی افسانه‌های شاهنامه خوش آمدید! من رستم، پهلوان افسانه‌ای ایران هستم. ضحاک، پادشاه ظالم، بر ایران حکومت می‌کند و مردم در رنج هستند. تو باید به من کمک کنی تا او را شکست دهیم و ایران را نجات دهیم.', () => {
+                showDialog('رستم', 'با کلیدهای جهت‌دار حرکت کن، با Space بپر، با کلید X حمله کن و با کلید Z از حمله ویژه استفاده کن. مراقب سربازان ضحاک باش!', () => {
+                    showDialog('رستم', 'ماموریت اول: ۵ سرباز دشمن را شکست بده. برو و قهرمانیت را ثابت کن!');
+                });
+            });
+        }
+
+        // Create game level
+        function createLevel() {
+            // Clear existing platforms and enemies
+            gameState.platforms = [];
+            gameState.enemies = [];
+            gameState.items = [];
+            gameState.particles = [];
+            gameState.floatingTexts = [];
+            
+            // Ground platform
+            gameState.platforms.push({
+                x: 0,
+                y: 550,
+                width: 2500,
+                height: 50,
+                color: '#5D4037',
+                texture: 'ground'
+            });
+            
+            // Platforms
+            gameState.platforms.push({
+                x: 300,
+                y: 450,
+                width: 200,
+                height: 20,
+                color: '#8D6E63',
+                texture: 'platform'
+            });
+            
+            gameState.platforms.push({
+                x: 600,
+                y: 350,
+                width: 150,
+                height: 20,
+                color: '#8D6E63',
+                texture: 'platform'
+            });
+            
+            gameState.platforms.push({
+                x: 900,
+                y: 250,
+                width: 200,
+                height: 20,
+                color: '#8D6E63',
+                texture: 'platform'
+            });
+            
+            gameState.platforms.push({
+                x: 1200,
+                y: 400,
+                width: 180,
+                height: 20,
+                color: '#8D6E63',
+                texture: 'platform'
+            });
+            
+            gameState.platforms.push({
+                x: 1500,
+                y: 300,
+                width: 220,
+                height: 20,
+                color: '#8D6E63',
+                texture: 'platform'
+            });
+            
+            gameState.platforms.push({
+                x: 1800,
+                y: 450,
+                width: 200,
+                height: 20,
+                color: '#8D6E63',
+                texture: 'platform'
+            });
+            
+            // Enemies
+            for (let i = 0; i < 8; i++) {
+                gameState.enemies.push({
+                    x: 500 + i * 200,
+                    y: 500,
+                    width: 40,
+                    height: 60,
+                    speed: 2 + Math.random(),
+                    health: 30,
+                    maxHealth: 30,
+                    damage: 10,
+                    color: '#D32F2F',
+                    type: 'soldier',
+                    attackCooldown: 0
+                });
+            }
+            
+            // Boss enemy
+            gameState.enemies.push({
+                x: 2200,
+                y: 450,
+                width: 80,
+                height: 100,
+                speed: 1,
+                health: 200,
+                maxHealth: 200,
+                damage: 25,
+                color: '#B71C1C',
+                type: 'boss',
+                attackCooldown: 0
+            });
+            
+            // Items (health potions)
+            for (let i = 0; i < 5; i++) {
+                gameState.items.push({
+                    x: 400 + i * 300,
+                    y: 400,
+                    width: 25,
+                    height: 25,
+                    type: 'health',
+                    color: '#E53935',
+                    value: 30,
+                    floating: true,
+                    floatOffset: 0
+                });
+            }
+            
+            // Items (mana potions)
+            for (let i = 0; i < 3; i++) {
+                gameState.items.push({
+                    x: 700 + i * 400,
+                    y: 300,
+                    width: 25,
+                    height: 25,
+                    type: 'mana',
+                    color: '#1E88E5',
+                    value: 40,
+                    floating: true,
+                    floatOffset: Math.random() * Math.PI * 2
+                });
+            }
+            
+            // Items (coins)
+            for (let i = 0; i < 15; i++) {
+                gameState.items.push({
+                    x: 200 + i * 120,
+                    y: 300 + Math.sin(i) * 100,
+                    width: 20,
+                    height: 20,
+                    type: 'coin',
+                    color: '#FFD700',
+                    value: 5,
+                    floating: true,
+                    floatOffset: Math.random() * Math.PI * 2
+                });
+            }
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Keyboard events
+            document.addEventListener('keydown', (e) => {
+                gameState.keys[e.key] = true;
+                
+                // Prevent arrow keys from scrolling the page
+                if(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
+                    e.preventDefault();
+                }
+                
+                // Space to jump
+                if (e.key === ' ' && !gameState.player.isJumping) {
+                    gameState.player.velocityY = -gameState.player.jumpForce;
+                    gameState.player.isJumping = true;
+                    createParticles(gameState.player.x + gameState.player.width/2, gameState.player.y + gameState.player.height, 5, '#FFFFFF');
+                    playSound('jump');
+                }
+                
+                // X to attack
+                if (e.key === 'x' || e.key === 'X') {
+                    if (gameState.player.attackCooldown <= 0) {
+                        gameState.player.attacking = true;
+                        gameState.player.attackCooldown = 20;
+                        checkAttack();
+                        playSound('attack');
+                    }
+                }
+                
+                // Z for special attack
+                if ((e.key === 'z' || e.key === 'Z') && gameState.player.mana >= 30) {
+                    if (gameState.player.specialCooldown <= 0) {
+                        gameState.player.specialAttacking = true;
+                        gameState.player.specialCooldown = 60;
+                        gameState.player.mana -= 30;
+                        checkSpecialAttack();
+                        playSound('special');
+                    }
+                }
+                
+                // Enter to continue dialog
+                if (e.key === 'Enter' && gameState.dialogActive) {
+                    continueDialog();
+                }
+            });
+            
+            document.addEventListener('keyup', (e) => {
+                gameState.keys[e.key] = false;
+            });
+            
+            // Button events
+            document.getElementById('start-btn').addEventListener('click', loadAssets);
+            document.getElementById('continue-btn').addEventListener('click', () => {
+                // In a real game, you would load saved game data
+                loadAssets();
+            });
+            document.getElementById('instructions-btn').addEventListener('click', () => {
+                showDialog('آموزش بازی', 'کنترل‌های بازی:\n- کلیدهای جهت‌دار: حرکت\n- Space: پریدن\n- X: حمله معمولی\n- Z: حمله ویژه (مصرف انرژی)\n- Enter: ادامه دیالوگ\n\nهدف بازی: شکست دادن ضحاک و نجات ایران\n\nماموریت‌ها:\n- سربازان دشمن را شکست دهید\n- سکه‌ها را جمع آوری کنید\n- معجون‌ها را برای بهبود سلامتی و انرژی استفاده کنید');
+            });
+            document.getElementById('credits-btn').addEventListener('click', () => {
+                document.getElementById('start-screen').classList.add('hidden');
+                document.getElementById('credits-screen').classList.remove('hidden');
+            });
+            document.getElementById('back-btn').addEventListener('click', () => {
+                document.getElementById('credits-screen').classList.add('hidden');
+                document.getElementById('start-screen').classList.remove('hidden');
+            });
+            document.getElementById('restart-btn').addEventListener('click', () => {
+                document.getElementById('game-over-screen').classList.add('hidden');
+                resetGame();
+                initGame();
+            });
+            document.getElementById('main-menu-btn').addEventListener('click', () => {
+                document.getElementById('game-over-screen').classList.add('hidden');
+                document.getElementById('start-screen').classList.remove('hidden');
+                stopBackgroundMusic();
+            });
+            document.getElementById('save-btn').addEventListener('click', saveGame);
+            document.getElementById('menu-btn').addEventListener('click', showMainMenu);
+            document.getElementById('sound-btn').addEventListener('click', toggleSound);
+            
+            // Dialog box click to continue
+            document.getElementById('dialog-box').addEventListener('click', continueDialog);
+        }
+
+        // Reset game state
+        function resetGame() {
+            gameState.player = {
+                x: 100,
+                y: 400,
+                width: 40,
+                height: 60,
+                speed: 6,
+                jumpForce: 16,
+                velocityY: 0,
+                isJumping: false,
+                health: 100,
+                maxHealth: 100,
+                mana: 100,
+                maxMana: 100,
+                strength: 15,
+                wisdom: 12,
+                level: 1,
+                experience: 0,
+                expToNextLevel: 100,
+                direction: 1,
+                attacking: false,
+                attackCooldown: 0,
+                specialAttacking: false,
+                specialCooldown: 0,
+                inventory: [],
+                gold: 0
+            };
+            
+            gameState.camera = {
+                x: 0,
+                y: 0
+            };
+            
+            gameState.gameTime = 0;
+            gameState.score = 0;
+            gameState.currentLevel = 1;
+            
+            gameState.quests.main.progress = 0;
+            gameState.quests.main.completed = false;
+        }
+
+        // Show dialog box
+        function showDialog(character, text, callback = null) {
+            gameState.dialogActive = true;
+            document.getElementById('dialog-character').textContent = character;
+            document.getElementById('dialog-text').textContent = text;
+            document.getElementById('dialog-box').classList.add('active');
+            gameState.dialogCallback = callback;
+        }
+
+        // Continue dialog
+        function continueDialog() {
+            if (gameState.dialogCallback) {
+                const callback = gameState.dialogCallback;
+                gameState.dialogCallback = null;
+                callback();
+            } else {
+                gameState.dialogActive = false;
+                document.getElementById('dialog-box').classList.remove('active');
+            }
+        }
+
+        // Check for attack hits
+        function checkAttack() {
+            const attackRange = 60;
+            const attackWidth = 25;
+            
+            const attackX = gameState.player.direction === 1 ? 
+                gameState.player.x + gameState.player.width : 
+                gameState.player.x - attackWidth;
+                
+            const attackY = gameState.player.y + gameState.player.height / 4;
+            
+            // Check each enemy
+            for (let i = 0; i < gameState.enemies.length; i++) {
+                const enemy = gameState.enemies[i];
+                
+                if (attackX < enemy.x + enemy.width &&
+                    attackX + attackWidth > enemy.x &&
+                    attackY < enemy.y + enemy.height &&
+                    attackY + attackWidth > enemy.y) {
+                    
+                    // Hit the enemy
+                    const damage = gameState.player.strength + Math.floor(Math.random() * 5);
+                    enemy.health -= damage;
+                    
+                    // Create hit effect
+                    createParticles(enemy.x + enemy.width/2, enemy.y + enemy.height/2, 8, '#FF5252');
+                    createFloatingText('-' + damage, enemy.x + enemy.width/2, enemy.y, '#FF5252');
+                    
+                    // Check if enemy is defeated
+                    if (enemy.health <= 0) {
+                        // Add experience and score
+                        gameState.player.experience += 20;
+                        gameState.score += enemy.type === 'boss' ? 100 : 10;
+                        
+                        // Check for level up
+                        checkLevelUp();
+                        
+                        // Update quest progress
+                        if (enemy.type === 'soldier') {
+                            gameState.quests.main.progress++;
+                            if (gameState.quests.main.progress >= gameState.quests.main.target) {
+                                gameState.quests.main.completed = true;
+                                showDialog('رستم', 'آفرین! ماموریت اول را با موفقیت به پایان رساندی. حالا به سمت قلعه ضحاک حرکت کن!');
+                                document.getElementById('quest-indicator').textContent = 'ماموریت: شکست دادن ضحاک';
+                            }
+                        }
+                        
+                        // Create death effect
+                        createParticles(enemy.x + enemy.width/2, enemy.y + enemy.height/2, 15, '#D32F2F');
+                        
+                        // Drop item
+                        if (Math.random() > 0.7) {
+                            gameState.items.push({
+                                x: enemy.x,
+                                y: enemy.y,
+                                width: 20,
+                                height: 20,
+                                type: 'coin',
+                                color: '#FFD700',
+                                value: 5,
+                                floating: true,
+                                floatOffset: Math.random() * Math.PI * 2
+                            });
+                        }
+                        
+                        // Remove enemy
+                        gameState.enemies.splice(i, 1);
+                        i--;
+                        
+                        // Check if all enemies are defeated
+                        if (gameState.enemies.length === 0) {
+                            showDialog('رستم', 'تبریک! تو بر همه دشمنان غلبه کردی و ایران را نجات دادی! تو یک قهرمان واقعی هستی!', () => {
+                                gameOver(true);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        // Check for special attack hits
+        function checkSpecialAttack() {
+            const attackRange = 100;
+            const attackWidth = 40;
+            
+            const attackX = gameState.player.direction === 1 ? 
+                gameState.player.x + gameState.player.width : 
+                gameState.player.x - attackWidth;
+                
+            const attackY = gameState.player.y;
+            
+            // Create special attack effect
+            createParticles(attackX + attackWidth/2, attackY + attackRange/2, 20, '#FFEB3B');
+            
+            // Check each enemy
+            for (let i = 0; i < gameState.enemies.length; i++) {
+                const enemy = gameState.enemies[i];
+                
+                if (attackX < enemy.x + enemy.width &&
+                    attackX + attackWidth > enemy.x &&
+                    attackY < enemy.y + enemy.height &&
+                    attackY + attackRange > enemy.y) {
+                    
+                    // Hit the enemy with special attack
+                    const damage = gameState.player.strength * 2 + Math.floor(Math.random() * 10);
+                    enemy.health -= damage;
+                    
+                    // Create hit effect
+                    createParticles(enemy.x + enemy.width/2, enemy.y + enemy.height/2, 12, '#FF9800');
+                    createFloatingText('-' + damage, enemy.x + enemy.width/2, enemy.y, '#FF9800');
+                    
+                    // Check if enemy is defeated
+                    if (enemy.health <= 0) {
+                        // Add experience and score
+                        gameState.player.experience += 20;
+                        gameState.score += enemy.type === 'boss' ? 100 : 10;
+                        
+                        // Check for level up
+                        checkLevelUp();
+                        
+                        // Update quest progress
+                        if (enemy.type === 'soldier') {
+                            gameState.quests.main.progress++;
+                            if (gameState.quests.main.progress >= gameState.quests.main.target) {
+                                gameState.quests.main.completed = true;
+                                showDialog('رستم', 'آفرین! ماموریت اول را با موفقیت به پایان رساندی. حالا به سمت قلعه ضحاک حرکت کن!');
+                                document.getElementById('quest-indicator').textContent = 'ماموریت: شکست دادن ضحاک';
+                            }
+                        }
+                        
+                        // Create death effect
+                        createParticles(enemy.x + enemy.width/2, enemy.y + enemy.height/2, 15, '#D32F2F');
+                        
+                        // Remove enemy
+                        gameState.enemies.splice(i, 1);
+                        i--;
+                        
+                        // Check if all enemies are defeated
+                        if (gameState.enemies.length === 0) {
+                            showDialog('رستم', 'تبریک! تو بر همه دشمنان غلبه کردی و ایران را نجات دادی! تو یک قهرمان واقعی هستی!', () => {
+                                gameOver(true);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        // Check for level up
+        function checkLevelUp() {
+            if (gameState.player.experience >= gameState.player.expToNextLevel) {
+                gameState.player.level++;
+                gameState.player.experience -= gameState.player.expToNextLevel;
+                gameState.player.expToNextLevel = Math.floor(gameState.player.expToNextLevel * 1.5);
+                
+                gameState.player.maxHealth += 20;
+                gameState.player.health = gameState.player.maxHealth;
+                gameState.player.maxMana += 15;
+                gameState.player.mana = gameState.player.maxMana;
+                gameState.player.strength += 3;
+                gameState.player.wisdom += 2;
+                
+                createParticles(gameState.player.x + gameState.player.width/2, gameState.player.y, 25, '#4CAF50');
+                createFloatingText('سطح UP!', gameState.player.x + gameState.player.width/2, gameState.player.y, '#4CAF50');
+                showDialog('سیستم', `تبریک! به سطح ${gameState.player.level} ارتقا یافتی! سلامتی، انرژی و قدرت تو افزایش یافت.`);
+                playSound('levelup');
+            }
+        }
+
+        // Create particles
+        function createParticles(x, y, count, color) {
+            for (let i = 0; i < count; i++) {
+                gameState.particles.push({
+                    x: x,
+                    y: y,
+                    size: Math.random() * 5 + 2,
+                    color: color,
+                    speedX: (Math.random() - 0.5) * 10,
+                    speedY: (Math.random() - 0.5) * 10,
+                    life: 30
+                });
+            }
+        }
+
+        // Create floating text
+        function createFloatingText(text, x, y, color) {
+            gameState.floatingTexts.push({
+                text: text,
+                x: x,
+                y: y,
+                color: color,
+                life: 90
+            });
+        }
+
+        // Play sound
+        function playSound(type) {
+            if (!gameState.soundEnabled) return;
+            
+            // In a real game, you would use actual sound files
+            // For this demo, we'll use the Web Audio API
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                let frequency = 440;
+                let duration = 0.1;
+                
+                switch(type) {
+                    case 'jump':
+                        frequency = 523;
+                        break;
+                    case 'attack':
+                        frequency = 349;
+                        break;
+                    case 'special':
+                        frequency = 659;
+                        duration = 0.3;
+                        break;
+                    case 'coin':
+                        frequency = 1046;
+                        break;
+                    case 'levelup':
+                        frequency = 880;
+                        duration = 0.5;
+                        break;
+                }
+                
+                oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+                
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + duration);
+            } catch (e) {
+                console.log("Audio context not supported");
+            }
+        }
+
+        // Update game state
+        function update() {
+            // Update player
+            updatePlayer();
+            
+            // Update enemies
+            updateEnemies();
+            
+            // Update items
+            updateItems();
+            
+            // Update particles
+            updateParticles();
+            
+            // Update floating texts
+            updateFloatingTexts();
+            
+            // Update camera
+            updateCamera();
+            
+            // Update game time
+            gameState.gameTime++;
+            
+            // Update attack cooldowns
+            if (gameState.player.attackCooldown > 0) {
+                gameState.player.attackCooldown--;
+            } else {
+                gameState.player.attacking = false;
+            }
+            
+            if (gameState.player.specialCooldown > 0) {
+                gameState.player.specialCooldown--;
+            } else {
+                gameState.player.specialAttacking = false;
+            }
+            
+            // Regenerate mana
+            if (gameState.player.mana < gameState.player.maxMana) {
+                gameState.player.mana += 0.1;
+            }
+            
+            // Update HUD
+            updateHUD();
+        }
+
+        // Update player
+        function updatePlayer() {
+            // Horizontal movement
+            if (gameState.keys['ArrowRight'] || gameState.keys['d'] || gameState.keys['D']) {
+                gameState.player.x += gameState.player.speed;
+                gameState.player.direction = 1;
+            }
+            
+            if (gameState.keys['ArrowLeft'] || gameState.keys['a'] || gameState.keys['A']) {
+                gameState.player.x -= gameState.player.speed;
+                gameState.player.direction = -1;
+            }
+            
+            // Apply gravity
+            gameState.player.velocityY += gameState.gravity;
+            gameState.player.y += gameState.player.velocityY;
+            
+            // Check platform collisions
+            gameState.player.isJumping = true;
+            
+            for (const platform of gameState.platforms) {
+                if (gameState.player.x < platform.x + platform.width &&
+                    gameState.player.x + gameState.player.width > platform.x &&
+                    gameState.player.y + gameState.player.height > platform.y &&
+                    gameState.player.y + gameState.player.height <= platform.y + 10 &&
+                    gameState.player.velocityY > 0) {
+                    
+                    gameState.player.y = platform.y - gameState.player.height;
+                    gameState.player.velocityY = 0;
+                    gameState.player.isJumping = false;
+                }
+            }
+            
+            // Check enemy collisions
+            for (const enemy of gameState.enemies) {
+                if (gameState.player.x < enemy.x + enemy.width &&
+                    gameState.player.x + gameState.player.width > enemy.x &&
+                    gameState.player.y < enemy.y + enemy.height &&
+                    gameState.player.y + gameState.player.height > enemy.y) {
+                    
+                    // Player takes damage
+                    gameState.player.health -= enemy.damage;
+                    
+                    // Create hit effect
+                    createParticles(gameState.player.x + gameState.player.width/2, gameState.player.y + gameState.player.height/2, 10, '#FF5252');
+                    createFloatingText('-' + enemy.damage, gameState.player.x + gameState.player.width/2, gameState.player.y, '#FF5252');
+                    
+                    // Knockback
+                    if (gameState.player.x < enemy.x) {
+                        gameState.player.x -= 30;
+                    } else {
+                        gameState.player.x += 30;
+                    }
+                    
+                    // Check if player is dead
+                    if (gameState.player.health <= 0) {
+                        gameOver(false);
+                    }
+                }
+            }
+            
+            // Check item collisions
+            for (let i = 0; i < gameState.items.length; i++) {
+                const item = gameState.items[i];
+                
+                if (gameState.player.x < item.x + item.width &&
+                    gameState.player.x + gameState.player.width > item.x &&
+                    gameState.player.y < item.y + item.height &&
+                    gameState.player.y + gameState.player.height > item.y) {
+                    
+                    // Collect item
+                    if (item.type === 'health') {
+                        gameState.player.health = Math.min(gameState.player.maxHealth, gameState.player.health + item.value);
+                        createFloatingText('+' + item.value + ' سلامتی', item.x, item.y, '#4CAF50');
+                        playSound('coin');
+                    } else if (item.type === 'mana') {
+                        gameState.player.mana = Math.min(gameState.player.maxMana, gameState.player.mana + item.value);
+                        createFloatingText('+' + item.value + ' انرژی', item.x, item.y, '#2196F3');
+                        playSound('coin');
+                    } else if (item.type === 'coin') {
+                        gameState.player.gold += item.value;
+                        gameState.score += item.value;
+                        createFloatingText('+' + item.value + ' سکه', item.x, item.y, '#FFD700');
+                        playSound('coin');
+                    }
+                    
+                    // Create collection effect
+                    createParticles(item.x + item.width/2, item.y + item.height/2, 8, item.color);
+                    
+                    // Remove item
+                    gameState.items.splice(i, 1);
+                    i--;
+                }
+            }
+            
+            // Boundary checks
+            if (gameState.player.x < 0) {
+                gameState.player.x = 0;
+            }
+            
+            if (gameState.player.y > canvas.height) {
+                gameOver(false);
+            }
+        }
+
+        // Update enemies
+        function updateEnemies() {
+            for (const enemy of gameState.enemies) {
+                // Simple AI: move towards player
+                if (enemy.x < gameState.player.x) {
+                    enemy.x += enemy.speed;
+                } else {
+                    enemy.x -= enemy.speed;
+                }
+                
+                // Update attack cooldown
+                if (enemy.attackCooldown > 0) {
+                    enemy.attackCooldown--;
+                }
+                
+                // Simple jumping logic for some enemies
+                if (enemy.type === 'soldier' && Math.random() < 0.01) {
+                    enemy.y -= 10;
+                }
+            }
+        }
+
+        // Update items
+        function updateItems() {
+            for (const item of gameState.items) {
+                // Floating animation
+                if (item.floating) {
+                    item.floatOffset += 0.05;
+                    item.y += Math.sin(item.floatOffset) * 0.5;
+                }
+            }
+        }
+
+        // Update particles
+        function updateParticles() {
+            for (let i = 0; i < gameState.particles.length; i++) {
+                const particle = gameState.particles[i];
+                
+                particle.x += particle.speedX;
+                particle.y += particle.speedY;
+                particle.life--;
+                
+                if (particle.life <= 0) {
+                    gameState.particles.splice(i, 1);
+                    i--;
+                }
+            }
+        }
+
+        // Update floating texts
+        function updateFloatingTexts() {
+            for (let i = 0; i < gameState.floatingTexts.length; i++) {
+                const text = gameState.floatingTexts[i];
+                
+                text.y -= 0.5;
+                text.life--;
+                
+                if (text.life <= 0) {
+                    gameState.floatingTexts.splice(i, 1);
+                    i--;
+                }
+            }
+        }
+
+        // Update camera
+        function updateCamera() {
+            // Simple camera that follows the player
+            gameState.camera.x = gameState.player.x - canvas.width / 2;
+            
+            // Keep camera within level bounds
+            if (gameState.camera.x < 0) {
+                gameState.camera.x = 0;
+            }
+            
+            if (gameState.camera.x > 2500 - canvas.width) {
+                gameState.camera.x = 2500 - canvas.width;
+            }
+        }
+
+        // Update HUD
+        function updateHUD() {
+            // Update health bar
+            const healthPercent = (gameState.player.health / gameState.player.maxHealth) * 100;
+            document.getElementById('health-fill').style.width = `${healthPercent}%`;
+            document.getElementById('health-text').textContent = `${Math.floor(gameState.player.health)}/${gameState.player.maxHealth}`;
+            
+            // Update mana bar
+            const manaPercent = (gameState.player.mana / gameState.player.maxMana) * 100;
+            document.getElementById('mana-fill').style.width = `${manaPercent}%`;
+            document.getElementById('mana-text').textContent = `${Math.floor(gameState.player.mana)}/${gameState.player.maxMana}`;
+            
+            // Update stats
+            document.getElementById('strength-value').textContent = gameState.player.strength;
+            document.getElementById('wisdom-value').textContent = gameState.player.wisdom;
+            document.getElementById('level-value').textContent = gameState.player.level;
+            document.getElementById('score-value').textContent = gameState.score;
+            
+            // Update quest progress
+            if (!gameState.quests.main.completed) {
+                document.getElementById('quest-indicator').textContent = `ماموریت: ${gameState.quests.main.progress}/${gameState.quests.main.target} سرباز`;
+            }
+        }
+
+        // Render game
+        function render() {
+            // Clear canvas with gradient background
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, '#1e3c72');
+            gradient.addColorStop(1, '#2a5298');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw parallax background
+            drawBackground();
+            
+            // Apply camera transform
+            ctx.save();
+            ctx.translate(-gameState.camera.x, -gameState.camera.y);
+            
+            // Draw platforms
+            for (const platform of gameState.platforms) {
+                ctx.fillStyle = platform.color;
+                ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+                
+                // Platform details
+                if (platform.texture === 'ground') {
+                    ctx.fillStyle = '#4E342E';
+                    for (let i = 0; i < platform.width; i += 40) {
+                        ctx.fillRect(platform.x + i, platform.y, 20, 5);
+                    }
+                } else {
+                    ctx.fillStyle = '#6D4C41';
+                    ctx.fillRect(platform.x, platform.y, platform.width, 5);
+                    ctx.fillRect(platform.x, platform.y + platform.height - 5, platform.width, 5);
+                }
+            }
+            
+            // Draw items
+            for (const item of gameState.items) {
+                ctx.fillStyle = item.color;
+                
+                if (item.type === 'coin') {
+                    // Draw coin
+                    ctx.beginPath();
+                    ctx.arc(item.x + item.width/2, item.y + item.height/2, item.width/2, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    ctx.fillStyle = '#FFEB3B';
+                    ctx.beginPath();
+                    ctx.arc(item.x + item.width/2, item.y + item.height/2, item.width/4, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    // Draw potion
+                    ctx.fillRect(item.x, item.y, item.width, item.height);
+                    
+                    ctx.fillStyle = '#FFFFFF';
+                    if (item.type === 'health') {
+                        ctx.fillRect(item.x + 5, item.y + 5, item.width - 10, 5);
+                    } else {
+                        ctx.fillRect(item.x + 5, item.y + 5, 5, item.height - 10);
+                        ctx.fillRect(item.x + item.width - 10, item.y + 5, 5, item.height - 10);
+                    }
+                }
+            }
+            
+            // Draw enemies
+            for (const enemy of gameState.enemies) {
+                ctx.fillStyle = enemy.color;
+                ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+                
+                // Enemy details
+                ctx.fillStyle = '#000000';
+                ctx.fillRect(enemy.x + 10, enemy.y + 15, 8, 8); // Eye
+                ctx.fillRect(enemy.x + enemy.width - 18, enemy.y + 15, 8, 8); // Eye
+                
+                // Enemy weapon
+                ctx.fillStyle = '#795548';
+                if (enemy.type === 'boss') {
+                    ctx.fillRect(enemy.x - 10, enemy.y + 30, 15, 10);
+                } else {
+                    ctx.fillRect(enemy.x + enemy.width/2 - 5, enemy.y + enemy.height, 10, 20);
+                }
+                
+                // Health bar
+                const healthPercent = (enemy.health / enemy.maxHealth) * enemy.width;
+                ctx.fillStyle = '#ff0000';
+                ctx.fillRect(enemy.x, enemy.y - 15, healthPercent, 8);
+                ctx.strokeStyle = '#ffffff';
+                ctx.strokeRect(enemy.x, enemy.y - 15, enemy.width, 8);
+            }
+            
+            // Draw player
+            ctx.fillStyle = '#1565C0';
+            ctx.fillRect(gameState.player.x, gameState.player.y, gameState.player.width, gameState.player.height);
+            
+            // Player details
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(gameState.player.x + 10, gameState.player.y + 15, 8, 8); // Eye
+            ctx.fillRect(gameState.player.x + gameState.player.width - 18, gameState.player.y + 15, 8, 8); // Eye
+            
+            // Player weapon
+            ctx.fillStyle = '#5D4037';
+            if (gameState.player.direction === 1) {
+                ctx.fillRect(gameState.player.x + gameState.player.width, gameState.player.y + 20, 25, 10);
+            } else {
+                ctx.fillRect(gameState.player.x - 25, gameState.player.y + 20, 25, 10);
+            }
+            
+            // Draw attack if active
+            if (gameState.player.attacking) {
+                ctx.fillStyle = '#FFEB3B';
+                const attackX = gameState.player.direction === 1 ? 
+                    gameState.player.x + gameState.player.width : 
+                    gameState.player.x - 25;
+                ctx.fillRect(attackX, gameState.player.y + gameState.player.height / 4, 25, 25);
+            }
+            
+            // Draw special attack if active
+            if (gameState.player.specialAttacking) {
+                ctx.fillStyle = '#FF9800';
+                const attackX = gameState.player.direction === 1 ? 
+                    gameState.player.x + gameState.player.width : 
+                    gameState.player.x - 40;
+                ctx.fillRect(attackX, gameState.player.y, 40, 100);
+            }
+            
+            // Draw particles
+            for (const particle of gameState.particles) {
+                ctx.fillStyle = particle.color;
+                ctx.beginPath();
+                ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Draw floating texts
+            for (const text of gameState.floatingTexts) {
+                ctx.fillStyle = text.color;
+                ctx.font = 'bold 16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(text.text, text.x, text.y);
+            }
+            
+            ctx.restore();
+            
+            // Draw mini-map
+            drawMiniMap();
+        }
+
+        // Draw parallax background
+        function drawBackground() {
+            // Draw distant mountains
+            ctx.fillStyle = '#1a237e';
+            for (let i = 0; i < 5; i++) {
+                const x = (i * 300 - gameState.camera.x * 0.1) % (canvas.width + 300) - 150;
+                ctx.beginPath();
+                ctx.moveTo(x, canvas.height - 100);
+                ctx.lineTo(x + 150, canvas.height - 200);
+                ctx.lineTo(x + 300, canvas.height - 100);
+                ctx.fill();
+            }
+            
+            // Draw closer mountains
+            ctx.fillStyle = '#283593';
+            for (let i = 0; i < 7; i++) {
+                const x = (i * 200 - gameState.camera.x * 0.2) % (canvas.width + 200) - 100;
+                ctx.beginPath();
+                ctx.moveTo(x, canvas.height - 50);
+                ctx.lineTo(x + 100, canvas.height - 150);
+                ctx.lineTo(x + 200, canvas.height - 50);
+                ctx.fill();
+            }
+            
+            // Draw trees
+            ctx.fillStyle = '#2E7D32';
+            for (let i = 0; i < 10; i++) {
+                const x = (i * 150 - gameState.camera.x * 0.5) % (canvas.width + 150) - 75;
+                ctx.fillRect(x, canvas.height - 150, 30, 100);
+                ctx.beginPath();
+                ctx.arc(x + 15, canvas.height - 180, 40, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Draw mini-map
+        function drawMiniMap() {
+            const miniMap = document.getElementById('mini-map');
+            const miniCtx = miniMap.getContext('2d');
+            
+            // Clear mini-map
+            miniCtx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+            miniCtx.fillRect(0, 0, miniMap.width, miniMap.height);
+            
+            // Draw level boundaries
+            miniCtx.strokeStyle = '#8B4513';
+            miniCtx.lineWidth = 2;
+            miniCtx.strokeRect(0, 0, miniMap.width, miniMap.height);
+            
+            // Calculate scale
+            const scaleX = miniMap.width / 2500;
+            const scaleY = miniMap.height / 600;
+            
+            // Draw platforms
+            miniCtx.fillStyle = '#8B4513';
+            for (const platform of gameState.platforms) {
+                miniCtx.fillRect(
+                    platform.x * scaleX,
+                    platform.y * scaleY,
+                    platform.width * scaleX,
+                    platform.height * scaleY
+                );
+            }
+            
+            // Draw player
+            miniCtx.fillStyle = '#1565C0';
+            miniCtx.fillRect(
+                gameState.player.x * scaleX,
+                gameState.player.y * scaleY,
+                Math.max(4, gameState.player.width * scaleX),
+                Math.max(4, gameState.player.height * scaleY)
+            );
+            
+            // Draw enemies
+            miniCtx.fillStyle = '#D32F2F';
+            for (const enemy of gameState.enemies) {
+                miniCtx.fillRect(
+                    enemy.x * scaleX,
+                    enemy.y * scaleY,
+                    Math.max(3, enemy.width * scaleX),
+                    Math.max(3, enemy.height * scaleY)
+                );
+            }
+            
+            // Draw items
+            miniCtx.fillStyle = '#FFD700';
+            for (const item of gameState.items) {
+                if (item.type === 'coin') {
+                    miniCtx.fillRect(
+                        item.x * scaleX,
+                        item.y * scaleY,
+                        Math.max(2, item.width * scaleX),
+                        Math.max(2, item.height * scaleY)
+                    );
+                }
+            }
+        }
+
+        // Game over
+        function gameOver(victory) {
+            document.getElementById('game-over-screen').classList.remove('hidden');
+            document.getElementById('game-over-title').textContent = victory ? 'پیروزی!' : 'پایان بازی';
+            document.getElementById('game-over-text').textContent = 
+                victory ? 'تبریک! تو برنده شدی و ایران را نجات دادی!' : 'شکست خوردی! دوباره تلاش کن.';
+            stopBackgroundMusic();
+        }
+
+        // Save game
+        function saveGame() {
+            // In a real game, you would save to localStorage or a server
+            createFloatingText('بازی ذخیره شد!', gameState.player.x + gameState.player.width/2, gameState.player.y, '#4CAF50');
+        }
+
+        // Show main menu
+        function showMainMenu() {
+            document.getElementById('start-screen').classList.remove('hidden');
+            stopBackgroundMusic();
+        }
+
+        // Toggle sound
+        function toggleSound() {
+            gameState.soundEnabled = !gameState.soundEnabled;
+            document.getElementById('sound-btn').textContent = `صدا: ${gameState.soundEnabled ? 'روشن' : 'خاموش'}`;
+            
+            if (gameState.soundEnabled) {
+                playBackgroundMusic();
+            } else {
+                stopBackgroundMusic();
+            }
+        }
+
+        // Main game loop
+        function gameLoop() {
+            update();
+            render();
+            requestAnimationFrame(gameLoop);
+        }
+    </script>
+</body>
+</html>

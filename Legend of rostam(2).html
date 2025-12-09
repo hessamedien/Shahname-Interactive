@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legend of Rostam</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Press Start 2P', cursive, Arial, sans-serif;
+            image-rendering: pixelated;
+        }
+
+        body {
+            background-color: #1a1a2e;
+            color: #e6e6e6;
+            overflow: hidden;
+            touch-action: none;
+            user-select: none;
+        }
+
+        /* Screen Container */
+        .screen {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s;
+        }
+
+        /* Loading Screen */
+        #loading-screen {
+            background: linear-gradient(to bottom, #0f3460, #1a1a2e);
+            z-index: 100;
+        }
+
+        .loading-container {
+            text-align: center;
+        }
+
+        .game-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #f8b500;
+            text-shadow: 4px 4px 0 #000;
+            animation: pulse 2s infinite;
+        }
+
+        .loading-bar {
+            width: 300px;
+            height: 20px;
+            background-color: #333;
+            border: 3px solid #000;
+            margin: 20px auto;
+            overflow: hidden;
+        }
+
+        .loading-progress {
+            height: 100%;
+            width: 0%;
+            background-color: #f8b500;
+            transition: width 0.3s;
+        }
+
+        .loading-text {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: #ccc;
+        }
+
+        .developer {
+            position: absolute;
+            bottom: 20px;
+            font-size: 0.7rem;
+            color: #888;
+        }
+
+        /* Menu Screen */
+        #menu-screen {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%231a1a2e"/><path d="M0,0 L100,100 M100,0 L0,100" stroke="%230f3460" stroke-width="1"/></svg>');
+            background-size: 50px;
+        }
+
+        .menu-container {
+            background-color: rgba(15, 52, 96, 0.8);
+            border: 4px solid #f8b500;
+            padding: 2rem;
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .menu-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #f8b500;
+            text-shadow: 3px 3px 0 #000;
+        }
+
+        .menu-options {
+            list-style: none;
+            margin: 2rem 0;
+        }
+
+        .menu-option {
+            margin: 1rem 0;
+            padding: 0.8rem;
+            background-color: #1a1a2e;
+            border: 2px solid #000;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #e6e6e6;
+        }
+
+        .menu-option:hover {
+            background-color: #f8b500;
+            color: #1a1a2e;
+            transform: scale(1.05);
+        }
+
+        /* Settings Screen */
+        .settings-container {
+            background-color: rgba(15, 52, 96, 0.9);
+            border: 4px solid #f8b500;
+            padding: 2rem;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .settings-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #f8b500;
+            text-align: center;
+        }
+
+        .setting {
+            margin: 1rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-button {
+            margin-top: 1.5rem;
+            padding: 0.5rem 1rem;
+            background-color: #1a1a2e;
+            border: 2px solid #000;
+            color: #e6e6e6;
+            cursor: pointer;
+        }
+
+        /* About Screen */
+        .about-container {
+            background-color: rgba(15, 52, 96, 0.9);
+            border: 4px solid #f8b500;
+            padding: 2rem;
+            width: 80%;
+            max-width: 600px;
+            text-align: left;
+            line-height: 1.6;
+        }
+
+        .about-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #f8b500;
+            text-align: center;
+        }
+
+        .about-text {
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+        }
+
+        /* Game Screen */
+        #game-screen {
+            background-color: #1a1a2e;
+            justify-content: flex-start;
+            padding-top: 10px;
+        }
+
+        .game-ui {
+            width: 95%;
+            max-width: 800px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 0 10px;
+        }
+
+        .health-bar {
+            display: flex;
+            align-items: center;
+        }
+
+        .health-hearts {
+            display: flex;
+        }
+
+        .heart {
+            width: 20px;
+            height: 20px;
+            background-color: #ff0000;
+            margin: 0 2px;
+            clip-path: polygon(50% 0%, 100% 35%, 82% 100%, 50% 80%, 18% 100%, 0% 35%);
+        }
+
+        .game-canvas-container {
+            position: relative;
+            width: 95%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        #game-canvas {
+            border: 4px solid #f8b500;
+            background-color: #0f3460;
+            width: 100%;
+            height: auto;
+        }
+
+        /* Mobile Controls */
+        #mobile-controls {
+            display: none;
+            position: absolute;
+            bottom: 20px;
+            width: 95%;
+            max-width: 800px;
+            justify-content: space-between;
+            padding: 0 10px;
+        }
+
+        .d-pad {
+            display: grid;
+            grid-template-areas: 
+                ". up ."
+                "left center right"
+                ". down .";
+            gap: 5px;
+        }
+
+        .control-btn {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 2px solid #f8b500;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #f8b500;
+            font-size: 24px;
+            touch-action: manipulation;
+        }
+
+        .control-btn:active {
+            background-color: rgba(248, 181, 0, 0.3);
+        }
+
+        #btn-up { grid-area: up; }
+        #btn-left { grid-area: left; }
+        #btn-right { grid-area: right; }
+        #btn-down { grid-area: down; }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        #btn-a, #btn-b {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background-color: rgba(255, 0, 0, 0.3);
+            border: 2px solid #ff0000;
+            color: white;
+            font-size: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Story Screen */
+        #story-screen {
+            background-color: rgba(15, 52, 96, 0.9);
+            z-index: 10;
+        }
+
+        .story-container {
+            background-color: rgba(26, 26, 46, 0.9);
+            border: 4px solid #f8b500;
+            padding: 2rem;
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .story-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #f8b500;
+        }
+
+        .story-text {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        .story-image {
+            width: 100%;
+            height: 150px;
+            background-color: #0f3460;
+            margin: 1rem 0;
+            border: 2px solid #f8b500;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #f8b500;
+            font-size: 0.8rem;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Hidden class */
+        .hidden {
+            display: none;
+        }
+
+        /* Media Queries for Mobile */
+        @media (max-width: 768px) {
+            .game-title, .menu-title {
+                font-size: 1.5rem;
+            }
+            
+            .menu-option {
+                padding: 0.6rem;
+                font-size: 0.8rem;
+            }
+            
+            #mobile-controls {
+                display: flex;
+            }
+            
+            .control-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 18px;
+            }
+            
+            #btn-a, #btn-b {
+                width: 60px;
+                height: 60px;
+                font-size: 16px;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="screen">
+        <div class="loading-container">
+            <h1 class="game-title">LEGEND OF ROSTAM</h1>
+            <div class="loading-bar">
+                <div class="loading-progress" id="loading-progress"></div>
+            </div>
+            <div class="loading-text" id="loading-text">Loading Game Assets...</div>
+        </div>
+        <div class="developer">Developed by Hessamedien</div>
+    </div>
+
+    <!-- Story Screen -->
+    <div id="story-screen" class="screen hidden">
+        <div class="story-container">
+            <h2 class="story-title">THE STORY BEGINS</h2>
+            <div class="story-image">[Image: Rostam facing the White Demon]</div>
+            <p class="story-text">
+                In the mythical land of Persia, the great hero Rostam embarks on his most perilous journey yet. 
+                The evil White Demon has captured the King and plunged the kingdom into darkness.
+            </p>
+            <p class="story-text">
+                Armed with his legendary sword and accompanied by his faithful horse Rakhsh, 
+                Rostam must traverse treacherous lands, battle mythical creatures, and solve ancient puzzles 
+                to rescue the King and restore peace to the kingdom.
+            </p>
+            <p class="story-text">
+                Your quest begins in the Forest of Mystery, where danger lurks behind every tree...
+            </p>
+            <button class="menu-option" id="start-game-btn">Begin Adventure</button>
+        </div>
+    </div>
+
+    <!-- Menu Screen -->
+    <div id="menu-screen" class="screen hidden">
+        <div class="menu-container">
+            <h1 class="menu-title">LEGEND OF ROSTAM</h1>
+            <ul class="menu-options">
+                <li class="menu-option" id="start-game">Start Game</li>
+                <li class="menu-option" id="settings">Settings</li>
+                <li class="menu-option" id="about">About</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Settings Screen -->
+    <div id="settings-screen" class="screen hidden">
+        <div class="settings-container">
+            <h2 class="settings-title">SETTINGS</h2>
+            <div class="setting">
+                <span>Music Volume</span>
+                <input type="range" min="0" max="100" value="80">
+            </div>
+            <div class="setting">
+                <span>Sound Effects</span>
+                <input type="range" min="0" max="100" value="90">
+            </div>
+            <div class="setting">
+                <span>Difficulty</span>
+                <select>
+                    <option>Easy</option>
+                    <option selected>Normal</option>
+                    <option>Hard</option>
+                </select>
+            </div>
+            <div class="setting">
+                <span>Controls</span>
+                <select id="control-type">
+                    <option value="keyboard">Keyboard</option>
+                    <option value="touch">Touch Controls</option>
+                </select>
+            </div>
+            <button class="back-button" id="settings-back">Back to Menu</button>
+        </div>
+    </div>
+
+    <!-- About Screen -->
+    <div id="about-screen" class="screen hidden">
+        <div class="about-container">
+            <h2 class="about-title">ABOUT LEGEND OF ROSTAM</h2>
+            <p class="about-text">
+                "Legend of Rostam" is an 8-bit adventure game inspired by the epic stories from the Shahnameh (The Book of Kings), 
+                the Persian epic poem written by Ferdowsi.
+            </p>
+            <p class="about-text">
+                You play as Rostam, the greatest hero of Persian mythology, on a quest to rescue the king from the clutches of evil forces. 
+                Battle mythical creatures, solve ancient puzzles, and restore peace to the kingdom.
+            </p>
+            <p class="about-text">
+                This game features classic 8-bit graphics and gameplay reminiscent of the SNES era, with a unique Persian mythology theme.
+            </p>
+            <p class="about-text">
+                Developed by: Hessamedien
+            </p>
+            <button class="back-button" id="about-back">Back to Menu</button>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen hidden">
+        <div class="game-ui">
+            <div class="health-bar">
+                <span>HEALTH:</span>
+                <div class="health-hearts">
+                    <div class="heart"></div>
+                    <div class="heart"></div>
+                    <div class="heart"></div>
+                    <div class="heart"></div>
+                    <div class="heart"></div>
+                </div>
+            </div>
+            <div class="score">SCORE: <span id="score-value">00000</span></div>
+        </div>
+        <div class="game-canvas-container">
+            <canvas id="game-canvas" width="800" height="500"></canvas>
+        </div>
+        <div id="mobile-controls">
+            <div class="d-pad">
+                <button class="control-btn" id="btn-up">↑</button>
+                <button class="control-btn" id="btn-left">←</button>
+                <button class="control-btn" id="btn-right">→</button>
+                <button class="control-btn" id="btn-down">↓</button>
+            </div>
+            <div class="action-buttons">
+                <button class="control-btn" id="btn-a">A</button>
+                <button class="control-btn" id="btn-b">B</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game Variables
+        let currentScreen = 'loading';
+        let loadingProgress = 0;
+        let player = {
+            x: 400,
+            y: 250,
+            width: 32,
+            height: 32,
+            speed: 3,
+            health: 5,
+            direction: 'down',
+            isAttacking: false,
+            attackCooldown: 0
+        };
+        let keys = {};
+        let gameRunning = false;
+        let score = 0;
+        let enemies = [];
+        let items = [];
+        let gameMap = [];
+        let currentLevel = 1;
+        let controlType = 'keyboard';
+
+        // DOM Elements
+        const loadingScreen = document.getElementById('loading-screen');
+        const menuScreen = document.getElementById('menu-screen');
+        const settingsScreen = document.getElementById('settings-screen');
+        const aboutScreen = document.getElementById('about-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const storyScreen = document.getElementById('story-screen');
+        const loadingProgressBar = document.getElementById('loading-progress');
+        const loadingText = document.getElementById('loading-text');
+        const startButton = document.getElementById('start-game');
+        const startGameBtn = document.getElementById('start-game-btn');
+        const settingsButton = document.getElementById('settings');
+        const aboutButton = document.getElementById('about');
+        const settingsBackButton = document.getElementById('settings-back');
+        const aboutBackButton = document.getElementById('about-back');
+        const gameCanvas = document.getElementById('game-canvas');
+        const ctx = gameCanvas.getContext('2d');
+        const scoreValue = document.getElementById('score-value');
+        const controlTypeSelect = document.getElementById('control-type');
+        const mobileControls = document.getElementById('mobile-controls');
+
+        // Mobile control buttons
+        const btnUp = document.getElementById('btn-up');
+        const btnDown = document.getElementById('btn-down');
+        const btnLeft = document.getElementById('btn-left');
+        const btnRight = document.getElementById('btn-right');
+        const btnA = document.getElementById('btn-a');
+        const btnB = document.getElementById('btn-b');
+
+        // Switch Screen Function
+        function switchScreen(screenName) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.add('hidden');
+            });
+            
+            // Show the requested screen
+            document.getElementById(`${screenName}-screen`).classList.remove('hidden');
+            currentScreen = screenName;
+            
+            // If switching to game screen, start the game loop
+            if (screenName === 'game' && !gameRunning) {
+                gameRunning = true;
+                initGame();
+                gameLoop();
+            }
+            
+            // Show/hide mobile controls based on control type
+            if (screenName === 'game') {
+                mobileControls.style.display = controlType === 'touch' ? 'flex' : 'none';
+            }
+        }
+
+        // Loading Simulation
+        function simulateLoading() {
+            const loadingInterval = setInterval(() => {
+                loadingProgress += Math.random() * 10;
+                if (loadingProgress > 100) {
+                    loadingProgress = 100;
+                    clearInterval(loadingInterval);
+                    setTimeout(() => {
+                        switchScreen('menu');
+                    }, 500);
+                }
+                
+                loadingProgressBar.style.width = `${loadingProgress}%`;
+                
+                // Update loading text based on progress
+                if (loadingProgress < 30) {
+                    loadingText.textContent = "Loading Game Assets...";
+                } else if (loadingProgress < 60) {
+                    loadingText.textContent = "Initializing Game World...";
+                } else if (loadingProgress < 90) {
+                    loadingText.textContent = "Loading Shahnameh Stories...";
+                } else {
+                    loadingText.textContent = "Almost Ready...";
+                }
+            }, 200);
+        }
+
+        // Initialize Game
+        function initGame() {
+            // Reset game state
+            player.x = 400;
+            player.y = 250;
+            player.health = 5;
+            player.direction = 'down';
+            player.isAttacking = false;
+            score = 0;
+            scoreValue.textContent = '00000';
+            currentLevel = 1;
+            
+            // Generate enemies
+            enemies = [];
+            for (let i = 0; i < 5; i++) {
+                enemies.push({
+                    x: Math.random() * 700 + 50,
+                    y: Math.random() * 400 + 50,
+                    width: 32,
+                    height: 32,
+                    speed: 1 + Math.random(),
+                    type: Math.random() > 0.7 ? 'demon' : 'soldier',
+                    health: Math.random() > 0.7 ? 2 : 1
+                });
+            }
+            
+            // Generate items
+            items = [];
+            for (let i = 0; i < 3; i++) {
+                items.push({
+                    x: Math.random() * 700 + 50,
+                    y: Math.random() * 400 + 50,
+                    width: 24,
+                    height: 24,
+                    type: i === 0 ? 'key' : (i === 1 ? 'potion' : 'coin')
+                });
+            }
+            
+            // Generate simple map with obstacles
+            gameMap = [];
+            for (let i = 0; i < 10; i++) {
+                gameMap.push({
+                    x: Math.random() * 700 + 50,
+                    y: Math.random() * 400 + 50,
+                    width: 40,
+                    height: 40,
+                    type: 'rock'
+                });
+            }
+        }
+
+        // Draw Player
+        function drawPlayer() {
+            // Body
+            ctx.fillStyle = '#f8b500';
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+            
+            // Details based on direction
+            ctx.fillStyle = '#000';
+            if (player.direction === 'down') {
+                // Face details
+                ctx.fillRect(player.x + 8, player.y + 8, 4, 4); // Left eye
+                ctx.fillRect(player.x + 20, player.y + 8, 4, 4); // Right eye
+                ctx.fillRect(player.x + 10, player.y + 20, 12, 4); // Mouth
+                
+                // Sword when attacking
+                if (player.isAttacking) {
+                    ctx.fillStyle = '#aaa';
+                    ctx.fillRect(player.x + 15, player.y + player.height, 4, 20);
+                }
+            } else if (player.direction === 'up') {
+                ctx.fillRect(player.x + 8, player.y + 20, 4, 4); // Left eye
+                ctx.fillRect(player.x + 20, player.y + 20, 4, 4); // Right eye
+                ctx.fillRect(player.x + 10, player.y + 8, 12, 4); // Mouth
+                
+                if (player.isAttacking) {
+                    ctx.fillStyle = '#aaa';
+                    ctx.fillRect(player.x + 15, player.y - 20, 4, 20);
+                }
+            } else if (player.direction === 'left') {
+                ctx.fillRect(player.x + 20, player.y + 8, 4, 4); // Left eye
+                ctx.fillRect(player.x + 20, player.y + 20, 4, 4); // Right eye
+                ctx.fillRect(player.x + 8, player.y + 15, 8, 4); // Mouth
+                
+                if (player.isAttacking) {
+                    ctx.fillStyle = '#aaa';
+                    ctx.fillRect(player.x - 20, player.y + 15, 20, 4);
+                }
+            } else if (player.direction === 'right') {
+                ctx.fillRect(player.x + 8, player.y + 8, 4, 4); // Left eye
+                ctx.fillRect(player.x + 8, player.y + 20, 4, 4); // Right eye
+                ctx.fillRect(player.x + 16, player.y + 15, 8, 4); // Mouth
+                
+                if (player.isAttacking) {
+                    ctx.fillStyle = '#aaa';
+                    ctx.fillRect(player.x + player.width, player.y + 15, 20, 4);
+                }
+            }
+        }
+
+        // Draw Enemies
+        function drawEnemies() {
+            enemies.forEach(enemy => {
+                if (enemy.type === 'demon') {
+                    ctx.fillStyle = '#8b0000'; // Dark red for demons
+                } else {
+                    ctx.fillStyle = '#4682b4'; // Steel blue for soldiers
+                }
+                
+                ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+                
+                // Enemy details
+                ctx.fillStyle = '#000';
+                ctx.fillRect(enemy.x + 8, enemy.y + 8, 4, 4); // Left eye
+                ctx.fillRect(enemy.x + 20, enemy.y + 8, 4, 4); // Right eye
+                
+                // Health indicator
+                if (enemy.health > 1) {
+                    ctx.fillStyle = '#ff0000';
+                    ctx.fillRect(enemy.x, enemy.y - 5, enemy.width, 3);
+                }
+            });
+        }
+
+        // Draw Items
+        function drawItems() {
+            items.forEach(item => {
+                if (item.type === 'key') {
+                    ctx.fillStyle = '#ffd700'; // Gold for key
+                    ctx.fillRect(item.x, item.y, item.width, item.height);
+                    ctx.fillStyle = '#000';
+                    ctx.fillRect(item.x + 8, item.y + 5, 8, 4); // Key handle
+                    ctx.fillRect(item.x + 12, item.y + 9, 2, 10); // Key shaft
+                } else if (item.type === 'potion') {
+                    ctx.fillStyle = '#00ff00'; // Green for potion
+                    ctx.fillRect(item.x, item.y, item.width, item.height);
+                    ctx.fillStyle = '#000';
+                    ctx.fillRect(item.x + 10, item.y + 5, 4, 14); // Potion bottle
+                } else if (item.type === 'coin') {
+                    ctx.fillStyle = '#ffd700'; // Gold for coin
+                    ctx.beginPath();
+                    ctx.arc(item.x + item.width/2, item.y + item.height/2, item.width/2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+        }
+
+        // Draw Map
+        function drawMap() {
+            gameMap.forEach(obstacle => {
+                ctx.fillStyle = '#654321'; // Brown for rocks
+                ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+                
+                // Rock details
+                ctx.fillStyle = '#333';
+                ctx.fillRect(obstacle.x + 5, obstacle.y + 5, 8, 8);
+                ctx.fillRect(obstacle.x + 25, obstacle.y + 15, 6, 6);
+                ctx.fillRect(obstacle.x + 15, obstacle.y + 25, 10, 10);
+            });
+        }
+
+        // Draw Game World
+        function drawGameWorld() {
+            // Draw background (simple grid pattern)
+            ctx.fillStyle = '#0f3460';
+            ctx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+            
+            // Draw some simple terrain
+            ctx.fillStyle = '#2a9d8f';
+            for (let i = 0; i < 10; i++) {
+                ctx.fillRect(i * 80, 400, 60, 100);
+            }
+            
+            // Draw map obstacles
+            drawMap();
+            
+            // Draw items
+            drawItems();
+            
+            // Draw enemies
+            drawEnemies();
+            
+            // Draw player
+            drawPlayer();
+            
+            // Draw level info
+            ctx.fillStyle = '#fff';
+            ctx.font = '16px "Press Start 2P"';
+            ctx.fillText(`LEVEL: ${currentLevel}`, 10, 30);
+        }
+
+        // Check Collisions
+        function checkCollisions() {
+            // Check player-enemy collisions
+            enemies.forEach((enemy, index) => {
+                if (player.x < enemy.x + enemy.width &&
+                    player.x + player.width > enemy.x &&
+                    player.y < enemy.y + enemy.height &&
+                    player.y + player.height > enemy.y) {
+                    
+                    // Player takes damage
+                    if (player.health > 0) {
+                        player.health--;
+                        updateHealthDisplay();
+                        
+                        // Knockback effect
+                        if (player.direction === 'up') player.y += 20;
+                        if (player.direction === 'down') player.y -= 20;
+                        if (player.direction === 'left') player.x += 20;
+                        if (player.direction === 'right') player.x -= 20;
+                        
+                        // Game over check
+                        if (player.health <= 0) {
+                            gameOver();
+                        }
+                    }
+                }
+                
+                // Check if player attacks enemy
+                if (player.isAttacking) {
+                    let attackX = player.x;
+                    let attackY = player.y;
+                    let attackWidth = player.width;
+                    let attackHeight = player.height;
+                    
+                    // Adjust attack area based on direction
+                    if (player.direction === 'up') {
+                        attackY -= 20;
+                        attackHeight += 20;
+                    } else if (player.direction === 'down') {
+                        attackHeight += 20;
+                    } else if (player.direction === 'left') {
+                        attackX -= 20;
+                        attackWidth += 20;
+                    } else if (player.direction === 'right') {
+                        attackWidth += 20;
+                    }
+                    
+                    if (attackX < enemy.x + enemy.width &&
+                        attackX + attackWidth > enemy.x &&
+                        attackY < enemy.y + enemy.height &&
+                        attackY + attackHeight > enemy.y) {
+                        
+                        enemy.health--;
+                        if (enemy.health <= 0) {
+                            enemies.splice(index, 1);
+                            score += 100;
+                            scoreValue.textContent = String(score).padStart(5, '0');
+                            
+                            // Add new enemy if all are defeated
+                            if (enemies.length === 0) {
+                                levelComplete();
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Check player-item collisions
+            items.forEach((item, index) => {
+                if (player.x < item.x + item.width &&
+                    player.x + player.width > item.x &&
+                    player.y < item.y + item.height &&
+                    player.y + player.height > item.y) {
+                    
+                    if (item.type === 'potion' && player.health < 5) {
+                        player.health++;
+                        updateHealthDisplay();
+                    } else if (item.type === 'coin') {
+                        score += 50;
+                        scoreValue.textContent = String(score).padStart(5, '0');
+                    }
+                    
+                    items.splice(index, 1);
+                }
+            });
+            
+            // Check player-map collisions
+            gameMap.forEach(obstacle => {
+                if (player.x < obstacle.x + obstacle.width &&
+                    player.x + player.width > obstacle.x &&
+                    player.y < obstacle.y + obstacle.height &&
+                    player.y + player.height > obstacle.y) {
+                    
+                    // Simple collision response - push player out
+                    if (player.direction === 'up') player.y = obstacle.y + obstacle.height;
+                    if (player.direction === 'down') player.y = obstacle.y - player.height;
+                    if (player.direction === 'left') player.x = obstacle.x + obstacle.width;
+                    if (player.direction === 'right') player.x = obstacle.x - player.width;
+                }
+            });
+        }
+
+        // Update Enemy Positions
+        function updateEnemies() {
+            enemies.forEach(enemy => {
+                // Simple AI - move toward player
+                if (enemy.x < player.x) enemy.x += enemy.speed;
+                if (enemy.x > player.x) enemy.x -= enemy.speed;
+                if (enemy.y < player.y) enemy.y += enemy.speed;
+                if (enemy.y > player.y) enemy.y -= enemy.speed;
+                
+                // Keep enemies in bounds
+                enemy.x = Math.max(0, Math.min(gameCanvas.width - enemy.width, enemy.x));
+                enemy.y = Math.max(0, Math.min(gameCanvas.height - enemy.height, enemy.y));
+            });
+        }
+
+        // Update Health Display
+        function updateHealthDisplay() {
+            const hearts = document.querySelectorAll('.heart');
+            hearts.forEach((heart, index) => {
+                if (index < player.health) {
+                    heart.style.backgroundColor = '#ff0000';
+                } else {
+                    heart.style.backgroundColor = '#333';
+                }
+            });
+        }
+
+        // Level Complete
+        function levelComplete() {
+            currentLevel++;
+            score += 500;
+            scoreValue.textContent = String(score).padStart(5, '0');
+            
+            // Add more enemies for next level
+            for (let i = 0; i < 3 + currentLevel; i++) {
+                enemies.push({
+                    x: Math.random() * 700 + 50,
+                    y: Math.random() * 400 + 50,
+                    width: 32,
+                    height: 32,
+                    speed: 1 + Math.random() * currentLevel * 0.5,
+                    type: Math.random() > 0.8 ? 'demon' : 'soldier',
+                    health: Math.random() > 0.8 - (currentLevel * 0.1) ? 2 : 1
+                });
+            }
+            
+            // Add new items
+            for (let i = 0; i < 2; i++) {
+                items.push({
+                    x: Math.random() * 700 + 50,
+                    y: Math.random() * 400 + 50,
+                    width: 24,
+                    height: 24,
+                    type: i === 0 ? 'potion' : 'coin'
+                });
+            }
+        }
+
+        // Game Over
+        function gameOver() {
+            gameRunning = false;
+            alert(`Game Over! Your score: ${score}`);
+            switchScreen('menu');
+        }
+
+        // Game Loop
+        function gameLoop() {
+            if (!gameRunning) return;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+            
+            // Update game state
+            if (player.attackCooldown > 0) {
+                player.attackCooldown--;
+            } else {
+                player.isAttacking = false;
+            }
+            
+            // Update player position based on keys
+            if ((keys['ArrowUp'] || keys['w'] || keys['W']) && player.y > 0) {
+                player.y -= player.speed;
+                player.direction = 'up';
+            }
+            if ((keys['ArrowDown'] || keys['s'] || keys['S']) && player.y < gameCanvas.height - player.height) {
+                player.y += player.speed;
+                player.direction = 'down';
+            }
+            if ((keys['ArrowLeft'] || keys['a'] || keys['A']) && player.x > 0) {
+                player.x -= player.speed;
+                player.direction = 'left';
+            }
+            if ((keys['ArrowRight'] || keys['d'] || keys['D']) && player.x < gameCanvas.width - player.width) {
+                player.x += player.speed;
+                player.direction = 'right';
+            }
+            
+            // Attack with spacebar or mobile button
+            if ((keys[' '] || keys['x'] || keys['X']) && player.attackCooldown === 0) {
+                player.isAttacking = true;
+                player.attackCooldown = 20;
+            }
+            
+            // Update enemies
+            updateEnemies();
+            
+            // Check collisions
+            checkCollisions();
+            
+            // Draw game world
+            drawGameWorld();
+            
+            // Continue game loop
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Event Listeners
+        document.addEventListener('keydown', (e) => {
+            keys[e.key] = true;
+        });
+
+        document.addEventListener('keyup', (e) => {
+            keys[e.key] = false;
+        });
+
+        // Mobile control event listeners
+        function setupMobileControls() {
+            // Direction buttons
+            btnUp.addEventListener('touchstart', () => keys['ArrowUp'] = true);
+            btnUp.addEventListener('touchend', () => keys['ArrowUp'] = false);
+            
+            btnDown.addEventListener('touchstart', () => keys['ArrowDown'] = true);
+            btnDown.addEventListener('touchend', () => keys['ArrowDown'] = false);
+            
+            btnLeft.addEventListener('touchstart', () => keys['ArrowLeft'] = true);
+            btnLeft.addEventListener('touchend', () => keys['ArrowLeft'] = false);
+            
+            btnRight.addEventListener('touchstart', () => keys['ArrowRight'] = true);
+            btnRight.addEventListener('touchend', () => keys['ArrowRight'] = false);
+            
+            // Action buttons
+            btnA.addEventListener('touchstart', () => keys[' '] = true);
+            btnA.addEventListener('touchend', () => keys[' '] = false);
+            
+            btnB.addEventListener('touchstart', () => {
+                // B button could be used for special ability
+                if (gameRunning) {
+                    // Special attack or ability
+                }
+            });
+        }
+
+        // Menu event listeners
+        startButton.addEventListener('click', () => {
+            switchScreen('story');
+        });
+
+        startGameBtn.addEventListener('click', () => {
+            switchScreen('game');
+        });
+
+        settingsButton.addEventListener('click', () => {
+            switchScreen('settings');
+        });
+
+        aboutButton.addEventListener('click', () => {
+            switchScreen('about');
+        });
+
+        settingsBackButton.addEventListener('click', () => {
+            switchScreen('menu');
+        });
+
+        aboutBackButton.addEventListener('click', () => {
+            switchScreen('menu');
+        });
+
+        controlTypeSelect.addEventListener('change', (e) => {
+            controlType = e.target.value;
+            if (currentScreen === 'game') {
+                mobileControls.style.display = controlType === 'touch' ? 'flex' : 'none';
+            }
+        });
+
+        // Start the loading simulation when page loads
+        window.addEventListener('load', () => {
+            simulateLoading();
+            setupMobileControls();
+        });
+    </script>
+</body>
+</html>

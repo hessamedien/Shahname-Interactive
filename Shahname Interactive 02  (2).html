@@ -1,0 +1,2257 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>افسانه‌های شاهنامه - رمان تعاملی پیشرفته</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/earlyaccess/iraniannastaliq.css" rel="stylesheet">
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css');
+        @import url('https://cdn.jsdelivr.net/gh/rastikerdar/shabnam-font@v5.0.1/dist/font-face.css');
+        
+        :root {
+            --primary-color: #8B4513;
+            --secondary-color: #A0522D;
+            --accent-color: #CD853F;
+            --text-color: #2F2F2F;
+            --bg-color: #F5F5DC;
+            --header-bg: rgba(245, 245, 220, 0.9);
+            --header-text: #2F2F2F;
+            --footer-bg: rgba(245, 245, 220, 0.9);
+            --footer-text: #2F2F2F;
+            --button-bg: #8B4513;
+            --button-text: #F5F5DC;
+            --button-hover: #A0522D;
+            --choice-bg: rgba(139, 69, 19, 0.1);
+            --choice-hover: rgba(139, 69, 19, 0.2);
+            --font-family: 'Vazir', 'Shabnam', Tahoma, sans-serif;
+            --font-nastaliq: 'Iranian Nastaliq', Tahoma, sans-serif;
+            --font-size: 18px;
+            --line-height: 1.8;
+            --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --border-radius: 16px;
+            --shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            --page-width: 1200px;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(139, 69, 19, 0.2);
+            --glass-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            --gradient-primary: linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #CD853F 100%);
+            --gradient-bg: linear-gradient(135deg, #F5F5DC 0%, #F0E6D2 50%, #F5F5DC 100%);
+            --menu-gradient: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+            --menu-hover-gradient: linear-gradient(135deg, #A0522D 0%, #CD853F 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: var(--font-family);
+            font-size: var(--font-size);
+            line-height: var(--line-height);
+            color: var(--text-color);
+            background: var(--gradient-bg);
+            transition: var(--transition);
+            overflow-x: hidden;
+            min-height: 100vh;
+            background-attachment: fixed;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .nastaliq {
+            font-family: var(--font-nastaliq);
+            font-size: 1.4rem;
+            line-height: 2.2;
+        }
+
+        /* فیلتر سیاه و سفید برای عکس‌ها - غیرفعال شده */
+        .character-image, .location-image {
+            filter: none;
+            transition: transform 0.3s ease;
+        }
+
+        .character-image:hover, .location-image:hover {
+            filter: none;
+            transform: scale(1.05);
+        }
+
+        /* صفحه آغازین */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(245, 245, 220, 0.9), rgba(240, 230, 210, 0.9)), 
+                        url('https://images.unsplash.com/photo-1589652717521-10c0d092dea9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            color: #2F2F2F;
+            text-align: center;
+        }
+        
+        #splash-screen h1 {
+            font-size: 4.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 1.5s ease-in-out;
+            color: #8B4513;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+        
+        #splash-screen h2 {
+            font-size: 2.8rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 1.8s ease-in-out 0.3s both;
+            margin-bottom: 3rem;
+            font-weight: 300;
+            color: #8B4513;
+        }
+        
+        .splash-subtitle {
+            font-size: 1.6rem;
+            opacity: 0.9;
+            margin-bottom: 4rem;
+            animation: fadeIn 2.5s ease-in-out 0.6s both;
+            font-weight: 300;
+            max-width: 600px;
+            line-height: 1.6;
+            color: #2F2F2F;
+        }
+        
+        .loading-bar {
+            width: 400px;
+            height: 8px;
+            background: rgba(139, 69, 19, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 2rem;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .loading-progress {
+            height: 100%;
+            width: 0%;
+            background: var(--gradient-primary);
+            border-radius: 10px;
+            animation: loading 3.5s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+            box-shadow: 0 0 10px rgba(139, 69, 19, 0.3);
+        }
+        
+        @keyframes loading {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* صفحه اصلی */
+        #main-menu {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+            background: linear-gradient(rgba(245, 245, 220, 0.9), rgba(240, 230, 210, 0.9)), 
+                        url('https://images.unsplash.com/photo-1589652717521-10c0d092dea9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') no-repeat center center;
+            background-size: cover;
+            color: #2F2F2F;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-menu-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(139, 69, 19, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(160, 82, 45, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(205, 133, 63, 0.06) 0%, transparent 50%);
+            z-index: -1;
+            animation: gradientShift 15s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { 
+                background: 
+                    radial-gradient(circle at 20% 50%, rgba(139, 69, 19, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(160, 82, 45, 0.08) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 80%, rgba(205, 133, 63, 0.06) 0%, transparent 50%);
+            }
+            50% { 
+                background: 
+                    radial-gradient(circle at 30% 60%, rgba(139, 69, 19, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 70% 30%, rgba(160, 82, 45, 0.08) 0%, transparent 50%),
+                    radial-gradient(circle at 50% 70%, rgba(205, 133, 63, 0.06) 0%, transparent 50%);
+            }
+            100% { 
+                background: 
+                    radial-gradient(circle at 20% 50%, rgba(139, 69, 19, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(160, 82, 45, 0.08) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 80%, rgba(205, 133, 63, 0.06) 0%, transparent 50%);
+            }
+        }
+        
+        .logo-container {
+            position: relative;
+            margin-bottom: 4rem;
+            text-align: center;
+        }
+        
+        .logo {
+            padding: 2rem 3rem;
+            background: var(--glass-bg);
+            border-radius: 24px;
+            box-shadow: 
+                0 0 30px rgba(139, 69, 19, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            border: 2px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .logo-text {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #8B4513;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo-subtitle {
+            font-size: 1.4rem;
+            color: #A0522D;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .title {
+            font-size: 4rem;
+            margin-bottom: 3rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            color: #8B4513;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+        
+        .subtitle {
+            font-size: 1.6rem;
+            margin-bottom: 4rem;
+            opacity: 0.9;
+            max-width: 700px;
+            line-height: 1.7;
+            font-weight: 300;
+            color: #2F2F2F;
+        }
+        
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+            width: 100%;
+            max-width: 500px;
+            align-items: center;
+        }
+        
+        .menu-btn {
+            padding: 1.8rem 2.2rem;
+            background: var(--menu-gradient);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            color: var(--button-text);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font-family);
+            box-shadow: var(--glass-shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            position: relative;
+            overflow: hidden;
+            font-weight: 500;
+            width: 100%;
+        }
+        
+        .menu-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--menu-hover-gradient);
+            z-index: -1;
+            transition: var(--transition);
+            opacity: 0;
+        }
+        
+        .menu-btn:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            border-color: rgba(139, 69, 19, 0.5);
+            color: #F5F5DC;
+        }
+        
+        .menu-btn:hover::before {
+            opacity: 1;
+        }
+        
+        .menu-btn i {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            transition: var(--transition);
+        }
+        
+        .menu-btn:hover i {
+            transform: scale(1.2);
+        }
+        
+        /* صفحات محتوا */
+        .content-page {
+            display: none;
+            padding: 2.5rem;
+            max-width: var(--page-width);
+            margin: 0 auto;
+            min-height: 100vh;
+            animation: fadeIn 0.8s ease-out;
+            position: relative;
+        }
+        
+        .page-header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            color: var(--header-text);
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 2.5rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: var(--gradient-primary);
+        }
+        
+        .page-header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.8rem;
+            color: #8B4513;
+            font-weight: 700;
+        }
+        
+        .page-content {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 3rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 2.5rem;
+            border: 1px solid var(--glass-border);
+            animation: slideInUp 0.8s ease-out;
+        }
+        
+        .page-footer {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            color: var(--footer-text);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            font-size: 1rem;
+            border: 1px solid var(--glass-border);
+        }
+        
+        /* صفحه داستان */
+        .story-container {
+            position: relative;
+            padding: 3rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 2.5rem;
+            border: 1px solid var(--glass-border);
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .story-text {
+            margin-bottom: 2.5rem;
+            text-align: justify;
+            font-size: 1.15rem;
+            line-height: 1.9;
+        }
+        
+        .character-image {
+            width: 240px;
+            height: 240px;
+            float: left;
+            margin: 0 1.8rem 1.2rem 0;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 2px solid rgba(139, 69, 19, 0.3);
+            object-fit: cover;
+            transition: var(--transition);
+        }
+        
+        .location-image {
+            width: 100%;
+            max-height: 450px;
+            object-fit: cover;
+            border-radius: 16px;
+            margin: 2rem 0;
+            box-shadow: var(--shadow);
+            border: 2px solid rgba(139, 69, 19, 0.3);
+            transition: var(--transition);
+        }
+        
+        .choices-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+        
+        .choice-btn {
+            padding: 1.5rem 2rem;
+            background: var(--choice-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: var(--text-color);
+            border: 1px solid rgba(139, 69, 19, 0.2);
+            border-radius: var(--border-radius);
+            font-size: 1.15rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: right;
+            font-family: var(--font-family);
+            box-shadow: var(--glass-shadow);
+            position: relative;
+            overflow: hidden;
+            font-weight: 500;
+        }
+        
+        .choice-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 6px;
+            height: 100%;
+            background: var(--gradient-primary);
+            transition: var(--transition);
+        }
+        
+        .choice-btn:hover {
+            background: var(--choice-hover);
+            transform: translateX(-12px) scale(1.02);
+            border-color: rgba(139, 69, 19, 0.4);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .choice-btn:hover::before {
+            width: 10px;
+        }
+        
+        /* نوار وضعیت */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 1.5rem 2rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+            animation: slideInDown 0.8s ease-out;
+        }
+        
+        .status-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            padding: 0 1.2rem;
+        }
+        
+        .status-label {
+            font-size: 1rem;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-weight: 500;
+        }
+        
+        .status-value {
+            font-weight: bold;
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+        }
+        
+        .status-bar-container {
+            position: relative;
+            width: 100%;
+            height: 14px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        .status-bar-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .status-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 2.5s infinite;
+        }
+        
+        .courage-bar { 
+            background: linear-gradient(to right, #8B0000, #B22222, #FF5252);
+        }
+        
+        .wisdom-bar { 
+            background: linear-gradient(to right, #0D47A1, #1565C0, #42A5F5);
+        }
+        
+        .loyalty-bar { 
+            background: linear-gradient(to right, #1B5E20, #2E7D32, #66BB6A);
+        }
+        
+        .fate-bar { 
+            background: linear-gradient(to right, #4A148C, #6A1B9A, #AB47BC);
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        /* پیشرفت داستان */
+        .progress-container {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            margin: 2rem 0;
+            overflow: hidden;
+            height: 12px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            transition: width 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+            animation: shimmer 2.5s infinite;
+        }
+        
+        /* دکمه شناور */
+        .floating-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            background: var(--gradient-primary);
+            color: #F5F5DC;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            transition: var(--transition);
+            font-size: 1.8rem;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .floating-btn:hover {
+            transform: scale(1.15) rotate(90deg);
+            box-shadow: 0 15px 30px rgba(139, 69, 19, 0.5);
+        }
+        
+        /* پاپ‌آپ‌ها */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 999;
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 3rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            max-width: 550px;
+            width: 90%;
+            display: none;
+            border: 1px solid var(--glass-border);
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .popup.fade-out {
+            animation: popOut 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards;
+        }
+        
+        .popup h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #8B4513;
+        }
+        
+        .popup p {
+            margin-bottom: 2rem;
+            text-align: center;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+        
+        .popup-buttons {
+            display: flex;
+            gap: 1.2rem;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+        
+        .popup-btn {
+            padding: 1rem 2rem;
+            background: var(--gradient-primary);
+            color: #F5F5DC;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font-family);
+            font-weight: 600;
+            min-width: 150px;
+        }
+        
+        .popup-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(139, 69, 19, 0.3);
+        }
+        
+        .popup-btn-secondary {
+            background: transparent;
+            color: var(--text-color);
+            border: 2px solid var(--primary-color);
+        }
+        
+        .popup-btn-secondary:hover {
+            background: var(--primary-color);
+            color: #F5F5DC;
+        }
+        
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+        
+        @keyframes popOut {
+            from {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+        }
+        
+        /* صفحه بارگذاری */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-bg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        
+        .spinner {
+            width: 80px;
+            height: 80px;
+            border: 6px solid rgba(139, 69, 19, 0.3);
+            border-radius: 50%;
+            border-top-color: #8B4513;
+            animation: spin 1.2s ease-in-out infinite;
+            margin-bottom: 2.5rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* انیمیشن‌های ویژه */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .slide-in-right {
+            animation: slideInRight 0.6s ease-out;
+        }
+        
+        .slide-in-up {
+            animation: slideInUp 0.6s ease-out;
+        }
+        
+        .slide-in-down {
+            animation: slideInDown 0.6s ease-out;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .highlight {
+            background: linear-gradient(135deg, rgba(139, 69, 19, 0.15), rgba(160, 82, 45, 0.1));
+            padding: 0.4rem 1rem;
+            border-radius: 8px;
+            border-right: 4px solid #8B4513;
+            font-weight: 500;
+        }
+        
+        .important {
+            color: #8B4513;
+            font-weight: bold;
+        }
+        
+        .dialogue {
+            font-style: italic;
+            margin: 2rem 0;
+            padding: 2rem;
+            background: rgba(139, 69, 19, 0.05);
+            border-radius: var(--border-radius);
+            border-right: 5px solid #8B4513;
+            position: relative;
+            line-height: 1.9;
+        }
+        
+        .dialogue::before {
+            content: '"';
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 4rem;
+            color: rgba(139, 69, 19, 0.3);
+            font-family: serif;
+            line-height: 1;
+        }
+        
+        .narrative {
+            font-weight: bold;
+            color: #8B4513;
+            font-size: 1.3rem;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(139, 69, 19, 0.05);
+            border-radius: var(--border-radius);
+            border-right: 4px solid #A0522D;
+            line-height: 1.8;
+        }
+        
+        /* کارت‌های شخصیت */
+        .character-profile {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .character-profile h2 {
+            color: #8B4513;
+            font-size: 2rem;
+            border-bottom: 3px solid rgba(139, 69, 19, 0.3);
+            padding-bottom: 0.8rem;
+            font-weight: 700;
+        }
+        
+        .character-details {
+            display: flex;
+            gap: 2.5rem;
+        }
+        
+        .character-info {
+            flex: 1;
+        }
+        
+        .character-stats {
+            display: flex;
+            gap: 1.2rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .stat-tag {
+            background: rgba(139, 69, 19, 0.1);
+            padding: 0.5rem 1.2rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            border: 1px solid rgba(139, 69, 19, 0.3);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+        
+        /* تنظیمات */
+        .settings-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .setting-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.2rem 0;
+            border-bottom: 1px solid rgba(139, 69, 19, 0.1);
+        }
+        
+        .setting-label {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        
+        .setting-select, .setting-input {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(139, 69, 19, 0.3);
+            border-radius: 8px;
+            padding: 0.7rem 1rem;
+            color: var(--text-color);
+            font-family: var(--font-family);
+            font-size: 1rem;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+        
+        .setting-select:focus, .setting-input:focus {
+            outline: none;
+            border-color: rgba(139, 69, 19, 0.6);
+            box-shadow: 0 0 0 2px rgba(139, 69, 19, 0.2);
+        }
+        
+        /* پنجره‌های شناور (Toast) */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1100;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .toast {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            color: var(--text-color);
+            padding: 1.2rem 1.8rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+            max-width: 350px;
+            animation: toastIn 0.5s ease-out, toastOut 0.5s ease-out 2s forwards;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .toast::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 6px;
+            height: 100%;
+            background: var(--gradient-primary);
+        }
+        
+        .toast h3 {
+            margin-bottom: 0.5rem;
+            color: #8B4513;
+            font-size: 1.2rem;
+        }
+        
+        .toast p {
+            margin: 0;
+            line-height: 1.5;
+        }
+        
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes toastOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+        }
+        
+        /* سازگاری با موبایل */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 3rem;
+            }
+            
+            #splash-screen h1 {
+                font-size: 3.2rem;
+            }
+            
+            #splash-screen h2 {
+                font-size: 2.2rem;
+            }
+            
+            .splash-subtitle {
+                font-size: 1.3rem;
+                padding: 0 1rem;
+            }
+            
+            .loading-bar {
+                width: 300px;
+            }
+            
+            .content-page {
+                padding: 1.5rem;
+            }
+            
+            .page-content {
+                padding: 2rem;
+            }
+            
+            .story-container {
+                padding: 2rem;
+            }
+            
+            .character-image {
+                float: none;
+                display: block;
+                margin: 0 auto 1.8rem;
+                width: 100%;
+                max-width: 300px;
+                height: auto;
+            }
+            
+            .status-bar {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .character-details {
+                flex-direction: column;
+            }
+            
+            .logo-text {
+                font-size: 2.5rem;
+            }
+            
+            .logo-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .setting-group {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .floating-btn {
+                width: 60px;
+                height: 60px;
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .popup {
+                padding: 2rem;
+            }
+            
+            .popup-buttons {
+                flex-direction: column;
+            }
+            
+            .toast-container {
+                right: 10px;
+                left: 10px;
+                top: 10px;
+            }
+            
+            .toast {
+                max-width: 100%;
+            }
+        }
+        
+        /* اسکرول بار سفارشی */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 6px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-primary);
+            border-radius: 6px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to bottom, #A0522D, #8B4513, #CD853F);
+        }
+    </style>
+</head>
+<body>
+    <!-- صفحه آغازین -->
+    <div id="splash-screen">
+        <h1>افسانه‌های شاهنامه</h1>
+        <h2>رمان تعاملی پیشرفته</h2>
+        <p class="splash-subtitle">تجربه‌ای مدرن و خاطره‌انگیز از داستان‌های کهن ایران زمین</p>
+        <div class="loading-bar">
+            <div class="loading-progress"></div>
+        </div>
+    </div>
+
+    <!-- صفحه بارگذاری -->
+    <div id="loading-screen" class="loading-screen" style="display: none;">
+        <div class="spinner"></div>
+        <p>در حال بارگذاری داستان...</p>
+    </div>
+
+    <!-- منوی اصلی -->
+    <div id="main-menu">
+        <div class="main-menu-bg"></div>
+        <div class="logo-container">
+            <div class="logo">
+                <div class="logo-text">افسانه‌های شاهنامه</div>
+                <div class="logo-subtitle">حماسه‌ای جاودان در قالبی مدرن</div>
+            </div>
+        </div>
+        <p class="subtitle">رمان تعاملی بر اساس شاهنامه فردوسی با رابط کاربری پیشرفته و تجربه‌ای بی‌نظیر</p>
+        <div class="menu-buttons">
+            <button class="menu-btn" onclick="startNewGame()">
+                <i class="fas fa-play-circle"></i>
+                <span>شروع رمان جدید</span>
+            </button>
+            <button class="menu-btn" onclick="continueGame()">
+                <i class="fas fa-history"></i>
+                <span>ادامه رمان</span>
+            </button>
+            <button class="menu-btn" onclick="showPage('table-of-contents')">
+                <i class="fas fa-book-open"></i>
+                <span>فهرست مطالب</span>
+            </button>
+            <button class="menu-btn" onclick="showPage('settings-page')">
+                <i class="fas fa-cog"></i>
+                <span>تنظیمات</span>
+            </button>
+            <button class="menu-btn" onclick="showPage('credits-page')">
+                <i class="fas fa-users"></i>
+                <span>سازندگان</span>
+            </button>
+            <button class="menu-btn" onclick="exitApp()">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>خروج</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- صفحه داستان -->
+    <div id="story-page" class="content-page">
+        <div class="page-header">
+            <h1>افسانه‌های جاودان شاهنامه</h1>
+            <p>رمان تعاملی بر اساس داستان‌های شاهنامه فردوسی</p>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="story-progress" style="width: 0%"></div>
+        </div>
+        
+        <div class="status-bar">
+            <div class="status-item">
+                <span class="status-label"><i class="fas fa-fist-raised"></i> شجاعت</span>
+                <span class="status-value" id="courage-value">50</span>
+                <div class="status-bar-container">
+                    <div class="status-bar-fill courage-bar" id="courage-bar" style="width: 50%"></div>
+                </div>
+            </div>
+            <div class="status-item">
+                <span class="status-label"><i class="fas fa-brain"></i> دانش</span>
+                <span class="status-value" id="wisdom-value">50</span>
+                <div class="status-bar-container">
+                    <div class="status-bar-fill wisdom-bar" id="wisdom-bar" style="width: 50%"></div>
+                </div>
+            </div>
+            <div class="status-item">
+                <span class="status-label"><i class="fas fa-handshake"></i> وفاداری</span>
+                <span class="status-value" id="loyalty-value">50</span>
+                <div class="status-bar-container">
+                    <div class="status-bar-fill loyalty-bar" id="loyalty-bar" style="width: 50%"></div>
+                </div>
+            </div>
+            <div class="status-item">
+                <span class="status-label"><i class="fas fa-dice"></i> تقدیر</span>
+                <span class="status-value" id="fate-value">50</span>
+                <div class="status-bar-container">
+                    <div class="status-bar-fill fate-bar" id="fate-bar" style="width: 50%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="story-container">
+            <div class="story-text" id="story-text">
+                <!-- محتوای داستان در اینجا قرار می‌گیرد -->
+            </div>
+            
+            <div class="choices-container" id="choices-container">
+                <!-- گزینه‌های انتخاب در اینجا قرار می‌گیرند -->
+            </div>
+        </div>
+        
+        <div class="page-footer">
+            <p>صفحه <span id="current-page">1</span> از <span id="total-pages">200</span></p>
+            <button class="menu-btn" onclick="showPage('main-menu')">بازگشت به منوی اصلی</button>
+        </div>
+    </div>
+
+    <!-- فهرست مطالب -->
+    <div id="table-of-contents" class="content-page">
+        <div class="page-header">
+            <h1>فهرست مطالب</h1>
+        </div>
+        
+        <div class="page-content">
+            <div class="menu-buttons">
+                <button class="menu-btn" onclick="showToast('پیشگفتار', 'صفحه پیشگفتار نمایش داده خواهد شد')">
+                    <i class="fas fa-scroll"></i>
+                    <span>پیشگفتار</span>
+                </button>
+                <button class="menu-btn" onclick="showToast('مقدمه', 'صفحه مقدمه نمایش داده خواهد شد')">
+                    <i class="fas fa-info-circle"></i>
+                    <span>مقدمه</span>
+                </button>
+                <button class="menu-btn" onclick="showToast('شخصیت‌ها', 'صفحه معرفی شخصیت‌ها نمایش داده خواهد شد')">
+                    <i class="fas fa-user-friends"></i>
+                    <span>معرفی شخصیت‌ها</span>
+                </button>
+                <button class="menu-btn" onclick="showToast('جهان داستان', 'صفحه جهان داستان نمایش داده خواهد شد')">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <span>جهان داستان</span>
+                </button>
+                <button class="menu-btn" onclick="showToast('گاه‌شمار', 'صفحه گاه‌شمار رویدادها نمایش داده خواهد شد')">
+                    <i class="fas fa-hourglass-half"></i>
+                    <span>گاه‌شمار رویدادها</span>
+                </button>
+                <button class="menu-btn" onclick="showPage('story-page')">
+                    <i class="fas fa-book"></i>
+                    <span>متن کامل رمان</span>
+                </button>
+                <button class="menu-btn" onclick="showToast('نقد و بررسی', 'صفحه نقد و بررسی نمایش داده خواهد شد')">
+                    <i class="fas fa-star"></i>
+                    <span>نقد و بررسی</span>
+                </button>
+                <button class="menu-btn" onclick="showToast('کپی رایت', 'صفحه کپی رایت نمایش داده خواهد شد')">
+                    <i class="fas fa-copyright"></i>
+                    <span>کپی رایت</span>
+                </button>
+                <button class="menu-btn" onclick="showToast('نسخه چاپی', 'نسخه چاپی در حال توسعه است')">
+                    <i class="fas fa-print"></i>
+                    <span>نسخه چاپی</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="page-footer">
+            <button class="menu-btn" onclick="showPage('main-menu')">بازگشت به منوی اصلی</button>
+        </div>
+    </div>
+
+    <!-- تنظیمات -->
+    <div id="settings-page" class="content-page">
+        <div class="page-header">
+            <h1>تنظیمات</h1>
+        </div>
+        
+        <div class="page-content">
+            <div class="settings-container">
+                <div class="setting-group">
+                    <label class="setting-label" for="theme-select">تم:</label>
+                    <select class="setting-select" id="theme-select" onchange="changeTheme(this.value)">
+                        <option value="light">پیش‌فرض (روشن)</option>
+                        <option value="dark">تیره</option>
+                        <option value="blue">آبی</option>
+                        <option value="green">سبز</option>
+                        <option value="gold">طلایی</option>
+                        <option value="purple">بنفش</option>
+                        <option value="red">قرمز</option>
+                        <option value="sepia">سپیا</option>
+                    </select>
+                </div>
+                
+                <div class="setting-group">
+                    <label class="setting-label" for="font-select">فونت:</label>
+                    <select class="setting-select" id="font-select" onchange="changeFont(this.value)">
+                        <option value="Vazir">وزیر</option>
+                        <option value="Shabnam">شبنم</option>
+                        <option value="Iranian Nastaliq">نستعلیق</option>
+                        <option value="Parastoo">پرستو</option>
+                        <option value="Samim">سمیم</option>
+                        <option value="Nahid">ناهید</option>
+                        <option value="Sahel">ساحل</option>
+                        <option value="Gandom">گندم</option>
+                    </select>
+                </div>
+                
+                <div class="setting-group">
+                    <label class="setting-label" for="font-size">اندازه فونت:</label>
+                    <input type="range" id="font-size" min="14" max="24" value="18" oninput="changeFontSize(this.value)">
+                    <span id="font-size-value">18px</span>
+                </div>
+                
+                <div class="setting-group">
+                    <label class="setting-label" for="line-height">فاصله خطوط:</label>
+                    <input type="range" id="line-height" min="1.4" max="2.2" step="0.1" value="1.8" oninput="changeLineHeight(this.value)">
+                    <span id="line-height-value">1.8</span>
+                </div>
+                
+                <div class="setting-group">
+                    <label class="setting-label">
+                        <input type="checkbox" id="auto-scroll" onchange="toggleAutoScroll(this.checked)">
+                        اسکرول خودکار
+                    </label>
+                </div>
+                
+                <div class="setting-group">
+                    <label class="setting-label">
+                        <input type="checkbox" id="background-music" onchange="toggleBackgroundMusic(this.checked)">
+                        موسیقی زمینه
+                    </label>
+                </div>
+                
+                <div class="setting-group">
+                    <label class="setting-label">
+                        <input type="checkbox" id="sound-effects" onchange="toggleSoundEffects(this.checked)">
+                        افکت‌های صوتی
+                    </label>
+                </div>
+                
+                <div class="setting-group">
+                    <label class="setting-label">
+                        <input type="checkbox" id="animations" onchange="toggleAnimations(this.checked)">
+                        انیمیشن‌ها
+                    </label>
+                </div>
+                
+                <div class="setting-group">
+                    <label class="setting-label">
+                        <input type="checkbox" id="save-choices" onchange="toggleSaveChoices(this.checked)" checked>
+                        ذخیره خودکار انتخاب‌ها
+                    </label>
+                </div>
+                
+                <div class="setting-group">
+                    <button class="menu-btn" onclick="resetProgress()">
+                        <i class="fas fa-redo"></i>
+                        <span>بازنشانی پیشرفت</span>
+                    </button>
+                </div>
+                
+                <div class="setting-group">
+                    <button class="menu-btn" onclick="exportSaveData()">
+                        <i class="fas fa-file-export"></i>
+                        <span>صدور اطلاعات ذخیره</span>
+                    </button>
+                    <button class="menu-btn" onclick="importSaveData()">
+                        <i class="fas fa-file-import"></i>
+                        <span>ورود اطلاعات ذخیره</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="page-footer">
+            <button class="menu-btn" onclick="showPage('main-menu')">بازگشت به منوی اصلی</button>
+        </div>
+    </div>
+
+    <!-- سازندگان -->
+    <div id="credits-page" class="content-page">
+        <div class="page-header">
+            <h1>سازندگان</h1>
+        </div>
+        
+        <div class="page-content">
+            <div class="credits-list">
+                <div class="character-profile">
+                    <h2>توسعه‌دهنده و نویسنده:</h2>
+                    <p>حسام‌الدین</p>
+                    
+                    <h2>بر اساس:</h2>
+                    <p>شاهنامه فردوسی</p>
+                    
+                    <h2>مشاور ادبی:</h2>
+                    <p>دکتر سعید قنبری</p>
+                    
+                    <h2>طراحی و توسعه:</h2>
+                    <p>حسام‌الدین</p>
+                    
+                    <h2>کپی رایت:</h2>
+                    <p>© 2023 افسانه‌های جاودان شاهنامه. تمامی حقوق محفوظ است.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="page-footer">
+            <button class="menu-btn" onclick="showPage('main-menu')">بازگشت به منوی اصلی</button>
+        </div>
+    </div>
+
+    <!-- پاپ‌آپ‌ها -->
+    <div id="popup-overlay" class="popup-overlay"></div>
+    
+    <div id="save-popup" class="popup">
+        <h2>ذخیره بازی</h2>
+        <p>آیا می‌خواهید پیشرفت بازی خود را ذخیره کنید؟</p>
+        <div class="popup-buttons">
+            <button class="popup-btn" onclick="saveGame()">بله، ذخیره کن</button>
+            <button class="popup-btn popup-btn-secondary" onclick="closePopupWithFade('save-popup')">خیر</button>
+        </div>
+    </div>
+    
+    <div id="load-popup" class="popup">
+        <h2>بارگذاری بازی</h2>
+        <p>آیا می‌خواهید بازی ذخیره شده خود را بارگذاری کنید؟</p>
+        <div class="popup-buttons">
+            <button class="popup-btn" onclick="loadGame()">بله، بارگذاری کن</button>
+            <button class="popup-btn popup-btn-secondary" onclick="closePopupWithFade('load-popup')">خیر</button>
+        </div>
+    </div>
+
+    <!-- پاپ‌آپ نام بازیکن -->
+    <div id="name-popup" class="popup">
+        <h2>نام قهرمان</h2>
+        <p>لطفاً نام شخصیت خود را وارد کنید:</p>
+        <input type="text" id="player-name-input" class="setting-input" placeholder="نام قهرمان" style="width: 100%; margin-bottom: 1.5rem;">
+        <div class="popup-buttons">
+            <button class="popup-btn" onclick="confirmPlayerName()">تأیید</button>
+            <button class="popup-btn popup-btn-secondary" onclick="closePopupWithFade('name-popup')">انصراف</button>
+        </div>
+    </div>
+
+    <!-- دکمه شناور -->
+    <button class="floating-btn no-print" onclick="showPage('settings-page')">
+        <i class="fas fa-cog"></i>
+    </button>
+
+    <!-- پنجره‌های شناور (Toast) -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- صداها -->
+    <audio id="background-music" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="click-sound">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="success-sound">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="danger-sound">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-sword-cutting-flesh-2780.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="magic-sound">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-magic-sweep-2355.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // داده‌های داستان با تصاویر جایگزین
+        const storyData = {
+            start: {
+                text: `
+                    <div class="character-image-placeholder" style="width:240px;height:240px;float:left;margin:0 1.8rem 1.2rem 0;background:var(--choice-bg);border-radius:16px;display:flex;align-items:center;justify-content:center;border:2px solid var(--glass-border);">
+                        <i class="fas fa-landmark" style="font-size:3rem;color:var(--primary-color);"></i>
+                    </div>
+                    <p class="narrative">در سرزمین افسانه‌ای ایران، جایی که کوه‌های بلند با ابرها دست برادری می‌دادند و رودهای خروشان قصه‌های کهن را زمزمه می‌کردند، پادشاهی به نام جمشید بر تخت فرمانروایی نشسته بود. او که صدها سال حکمرانی کرده بود، ایران را به اوج شکوفایی و رفاه رسانده بود.</p>
+                    <p>تو <span class="highlight" id="player-name">[نام تو]</span>، یکی از بزرگان و مشاوران مورد اعتماد دربار جمشید هستی. امروز روز ویژهای است؛ جشن بزرگ نوروز که نماد پیروزی نور بر تاریکی و آغاز سال نو است.</p>
+                    <p>در کاخ طلایی جمشید، تالاری وسیع با ستون‌های مرمرین و دیوارهای مزین به نقش‌های اساطیری، پذیرای مهمانان شده است. فرش‌های نفیس ایرانی، چلچراغ‌های بلورین و عطریات خوشبو فضای دربار را آکنده از شکوه و جلال کرده‌اند.</p>
+                    <p>جمشید بر تخت طلایی خود نشسته، تاجی درخشان بر سر دارد و ردایی از ابریشم و زربفت بر دوش. او با نگاهی مغرور به درباریان و مردم می‌نگرد که برای عرض تبریک گرد آمده‌اند.</p>
+                    <p>ناگهان، سکوتی سنگین بر تالار حکم‌فرما می‌شود. جمشید از جای برمی‌خیزد و با صدایی رسا که در سراسر تالار می‌پیچد، اعلام می‌کند:</p>
+                    <p class="dialogue">"ای مردمان! این همه نعمت و برکت که می‌بینید، از الطاف و کرم من است! منم که جهان را از تاریکی به روشنایی کشاندم! از این پس، مرا به عنوان خداوندگار جهان بپرستید، چرا که من خدای راستین شما هستم!"</p>
+                    <p>سکوتی مرگبار سراسر تالار را فرا می‌گیرد. چهره‌های حاضران از شنیدن این ادعای کفرآمیز در هم می‌رود. برخی در بهت و حیرت به یکدیگر نگاه می‌کنند، برخی دیگر سرهای خود را از شرم و خجالت پایین انداخته‌اند.</p>
+                    <p>تو به عنوان یکی از بزرگان دربار، شاهد این صحنه غیرمنتظره هستی. قلبت تند می‌زند و ذهنت با سوالات زیادی درگیر است. آیا جمشید واقعاً چنین ادعای بزرگی کرده است؟ آیا او فره ایزدی را از دست داده است؟</p>
+                    <p>در این لحظه سرنوشت‌ساز، باید تصمیم بگیری...</p>
+                `,
+                choices: [
+                    {
+                        text: "با شجاعت در برابر جمشید می‌ایستی و او را از عواقب این ادعا برحذر می‌داری",
+                        next: "warning_immediate",
+                        effects: { courage: 10, loyalty: 5, wisdom: -5 }
+                    },
+                    {
+                        text: "سکوت می‌کنی و منتظر می‌مانی تا ببینی دیگران چه واکنشی نشان می‌دهند",
+                        next: "silence",
+                        effects: { courage: -10, wisdom: 5 }
+                    },
+                    {
+                        text: "با چند تن از بزرگان دیگر دربار مشورت می‌کنی",
+                        next: "consult_nobles",
+                        effects: { wisdom: 10, courage: -5, loyalty: 5 }
+                    },
+                    {
+                        text: "مخفیانه از تالار خارج می‌شوی تا در مورد واکنش خود بیشتر فکر کنی",
+                        next: "leave_hall",
+                        effects: { wisdom: 5, courage: -5, loyalty: 0 }
+                    }
+                ]
+            },
+            
+            warning_immediate: {
+                text: `
+                    <div class="character-image-placeholder" style="width:240px;height:240px;float:left;margin:0 1.8rem 1.2rem 0;background:var(--choice-bg);border-radius:16px;display:flex;align-items:center;justify-content:center;border:2px solid var(--glass-border);">
+                        <i class="fas fa-exclamation-triangle" style="font-size:3rem;color:var(--primary-color);"></i>
+                    </div>
+                    <p>قلبت به تندی می‌زند، اما می‌دانی که سکوت در این موقعیت برابر با رضایت است. با شجاعت تمام از جای برمی‌خیزی و در میان سکوت سنگین تالار، خطاب به جمشید می‌گویی:</p>
+                    <p class="dialogue">"ای پادشاه جهان! فراموش نکن که این همه نعمت و قدرت، از الطاف یزدان پاک است. غرور و خودبینی، راه به تباهی می‌برد و خشم اهورامزدا را برمی‌انگیزد. به یاد آور که تو نیز بشری و مانند دیگران خواهی مرد!"</p>
+                    <p>جمشید با چشمانی گشاده و خشمگین به تو می‌نگرد. صورتش از خشم سرخ شده و رگ‌های گردنش برآمده است. او که انتظار چنین واکنشی را نداشته، برای لحظه‌ای مبهوت می‌ماند.</p>
+                    <p class="dialogue">"جرأت داری در حضور همه مرا نصیحت کنی؟!"</p>
+                    <p>فریاد می‌زند و ادامه می‌دهد:</p>
+                    <p class="dialogue">"من خود آفریننده این نعمت‌ها هستم! تو و امثال تو فقط به خاطر بخشش من زنده‌اید! نگهبانان! این گستاخ را بگیرید!"</p>
+                    <p>نگهبانان مسلح که در اطراف تالار ایستاده‌اند، به سوی تو می‌آیند. صدای زمزمه حاضران در تالار بلند می‌شود. چند تن از درباریان با نگرانی به تو نگاه می‌کنند.</p>
+                    <p>در این لحظه حساس، باید سریع تصمیم بگیری...</p>
+                `,
+                choices: [
+                    {
+                        text: "در موضع خود پافشاری می‌کنی و هشدار می‌دهی که این غرور به بهای تاج و تختش تمام خواهد شد",
+                        next: "stand_firm",
+                        effects: { courage: 15, loyalty: 10, wisdom: -10 }
+                    },
+                    {
+                        text: "عذرخواهی می‌کنی و می‌گویی فقط نگران پادشاه و کشور بوده‌ای",
+                        next: "apologize",
+                        effects: { courage: -10, wisdom: 5, loyalty: -5 }
+                    },
+                    {
+                        text: "به جمشید یادآوری می‌کنی که چگونه پدرش پادشاهی را به او سپرد",
+                        next: "remind_father",
+                        effects: { wisdom: 15, courage: 5, loyalty: 10 }
+                    },
+                    {
+                        text: "به درباریان متوسل می‌شوی تا از تو حمایت کنند",
+                        next: "appeal_nobles",
+                        effects: { wisdom: 10, courage: 0, loyalty: 5 }
+                    }
+                ]
+            },
+            
+            stand_firm: {
+                text: `
+                    <div class="character-image-placeholder" style="width:240px;height:240px;float:left;margin:0 1.8rem 1.2rem 0;background:var(--choice-bg);border-radius:16px;display:flex;align-items:center;justify-content:center;border:2px solid var(--glass-border);">
+                        <i class="fas fa-crown" style="font-size:3rem;color:var(--primary-color);"></i>
+                    </div>
+                    <p>با وجود تهدید جمشید و نزدیک شدن نگهبانان، همچنان محکم و استوار در جای خود ایستاده‌ای. چشمانت را به چشمان او می‌دوزی و با صدایی رسا که در سراسر تالار می‌پیچد، می‌گویی:</p>
+                    <p class="dialogue">"ای پادشاه! یادت باشد که جمشیدی که ما می‌شناختیم، پادشاهی خردمند و فروتن بود. او می‌دانست که قدرت واقعی از جانب اهورامزداست. این جمشید مغرور و متکبر، برای ما بیگانه است!"</p>
+                    <p>جمشید از این جسارت تو به خشم می‌آید. چهره‌اش برافروخته شده و دستانش می‌لرزد. او فریاد می‌زند:</p>
+                    <p class="dialogue">"این آخرین هشدار است! اگر یک کلمه دیگر بگویی، سرت را از تن جدا خواهم کرد!"</p>
+                    <p>نگهبانان نزدیک شده‌اند و شمشیرهایشان را از نیام بیرون کشیده‌اند. صدای برخورد زره‌هایشان فضای تالار را پر کرده است.</p>
+                    <p>ناگهان، چند تن از بزرگان دیگر دربار نیز به پشتیبانی تو برمی‌خیزند. آن‌ها در کنار تو می‌ایستند و با نگاهی مصمم به جمشید نگاه می‌کنند. وضعیت بسیار حساس و تنش‌آمیز شده است.</p>
+                    <p class="narrative">در این لحظه، گویی زمان ایستاده است. هر تصمیمی می‌گیری، سرنوشت تو و شاید تمام ایران را تغییر خواهد داد.</p>
+                `,
+                choices: [
+                    {
+                        text: "با شجاعت کامل در برابر جمشید می‌ایستی و می‌گویی که از مرگ نمی‌ترسی",
+                        next: "defy_jamshid",
+                        effects: { courage: 20, wisdom: -15, loyalty: 10 }
+                    },
+                    {
+                        text: "با احترام اما قاطعانه از تالار خارج می‌شوی",
+                        next: "dignified_exit",
+                        effects: { courage: 10, wisdom: 15, loyalty: 5 }
+                    },
+                    {
+                        text: "از جمشید می‌خواهی که فرصتی برای اثبات ادعایش به او داده شود",
+                        next: "challenge_proof",
+                        effects: { wisdom: 20, courage: 5, loyalty: 0 }
+                    },
+                    {
+                        text: "به جمشید پیشنهاد می‌دهی که با موبدان زرتشتی مشورت کند",
+                        next: "consult_mobeds",
+                        effects: { wisdom: 15, courage: 0, loyalty: 10 }
+                    }
+                ]
+            },
+            
+            defy_jamshid: {
+                text: `
+                    <div class="location-image-placeholder" style="width:100%;max-height:450px;margin:2rem 0;background:var(--choice-bg);border-radius:16px;display:flex;align-items:center;justify-content:center;border:2px solid var(--glass-border);padding:2rem;">
+                        <i class="fas fa-dungeon" style="font-size:4rem;color:var(--primary-color);"></i>
+                    </div>
+                    <p class="narrative">جمشید از مقاومت تو به خشم می‌آید و دستور می‌دهد تو را به زندان بیندازند. تو را به سیاهچاله‌ای تاریک و نمور می‌برند که مملو از موش و حشرات موذی است.</p>
+                    <p>روزها و شب‌های بسیاری در این زندان تاریک می‌گذرانی. گاه صدای ناله دیگر زندانیان را می‌شنوی. غذایت نان خشک و آب گندیده است. اما روحیه تو شکسته نمی‌شود و به درستی راه خود ایمان داری.</p>
+                    <p>یک شب، نگهبانی که ظاهراً از رفتار جمشید ناراضی است، مخفیانه به تو نزدیک می‌شود و می‌گوید:</p>
+                    <p class="dialogue">"اخبار بدی از بیرون به گوش می‌رسد. ضحاک، شاهزاده عرب، با لشکری بزرگ به ایران حمله کرده است. جمشید از ترس فرار کرده و کسی از جای او خبر ندارد."</p>
+                    <p>این خبر تو را شوکه می‌کند. ایران در خطر است و تو در این زندان به سر می‌بری...</p>
+                `,
+                choices: [
+                    {
+                        text: "از نگهبان درخواست می‌کنی که تو را آزاد کند تا در دفاع از ایران شرکت کنی",
+                        next: "request_freedom",
+                        effects: { courage: 15, loyalty: 20, wisdom: 5 }
+                    },
+                    {
+                        text: "طرح فرار از زندان را می‌ریزی",
+                        next: "escape_plan",
+                        effects: { courage: 20, wisdom: 15, loyalty: -5 }
+                    },
+                    {
+                        text: "از نگهبان می‌خواهی که پیامی برای خانواده‌ات ببرد",
+                        next: "send_message",
+                        effects: { wisdom: 10, courage: 0, loyalty: 10 }
+                    },
+                    {
+                        text: "در زندان می‌مانی و منتظر نشانه‌ای از اهورامزدا می‌مانی",
+                        next: "wait_sign",
+                        effects: { wisdom: 5, courage: -5, loyalty: 5 }
+                    }
+                ]
+            },
+            
+            silence: {
+                text: `
+                    <div class="character-image-placeholder" style="width:240px;height:240px;float:left;margin:0 1.8rem 1.2rem 0;background:var(--choice-bg);border-radius:16px;display:flex;align-items:center;justify-content:center;border:2px solid var(--glass-border);">
+                        <i class="fas fa-crown" style="font-size:3rem;color:var(--primary-color);"></i>
+                    </div>
+                    <p class="narrative">در دلت می‌جنگی، اما در نهایت تصمیم می‌گیری سکوت کنی و منتظر بمانی. شاید جمشید از این ادعای کفرآمیز خود دست بردارد یا شاید دیگران واکنش نشان دهند.</p>
+                    <p>اما هیچکس جرات سخن گفتن ندارد. جمشید با لبخندی رضایت‌بخش به تماشای سکوت حاضران می‌نشیند. او این سکوت را به معنای تایید خود می‌پندارد.</p>
+                    <p>روزها و هفته‌ها می‌گذرد و جمشید نه تنها از ادعای خود دست نمی‌کشد، بلکه روز به روز مغرورتر می‌شود. او دستور می‌دهد تندیس‌های بزرگی از خود در سراسر ایران برپا کنند و مردم را مجبور می‌کند که او را بپرستند.</p>
+                    <p>کسانی که مخالفت می‌کنند، به شدت مجازات می‌شوند. تو شاهد اعدام چندین تن از دوستان و همکارانت هستی که جرات اعتراض داشتند.</p>
+                    <p>یک سال بعد، خبری هولناک به گوش می‌رسد: ضحاک، شاهزاده عرب، با لشکری بزرگ به مرزهای ایران حمله کرده است. جمشید که از فره ایزدی محروم شده، توانایی مقابله با او را ندارد و مانند موشی از ترس فرار می‌کند.</p>
+                    <p>ضحاک به سرعت بر ایران مسلط می‌شود و هزار سال حکومت ظالمانه خود را آغاز می‌کند. او هر روز دو جوان ایرانی را می‌کشد و مغزشان را به مارهای روی شانه‌هایش می‌دهد.</p>
+                    <p>تو که شاهد این فاجعه هستی، اکنون عمیقاً پشیمان شده‌ای که در آن روز سرنوشت‌ساز سکوت کردی. آیا می‌توانی این اشتباه را جبران کنی؟</p>
+                `,
+                choices: [
+                    {
+                        text: "مخفیانه به مبارزه با ضحاک می‌پردازی و به خانواده‌هایی که فرزندانشان در خطر هستند کمک می‌کنی",
+                        next: "resist_zahhak_secretly",
+                        effects: { courage: 15, wisdom: 10, loyalty: 5 }
+                    },
+                    {
+                        text: "به دربار ضحاک می‌روی و وانمود می‌کنی به او وفادار هستی تا از درون ضربه بزنی",
+                        next: "infiltrate_zahhak_court",
+                        effects: { wisdom: 20, courage: -10, loyalty: -15 }
+                    },
+                    {
+                        text: "به کوهستان می‌گریزی و به جمع هواداران فریدون می‌پیوندی",
+                        next: "join_fereydun_mountains",
+                        effects: { courage: 10, wisdom: 15, loyalty: 20 }
+                    },
+                    {
+                        text: "به دنبال کاوه آهنگر می‌گردی که شنیده‌ای علیه ضحاک قیام کرده است",
+                        next: "find_kaveh",
+                        effects: { courage: 5, wisdom: 10, loyalty: 15 }
+                    }
+                ]
+            },
+            
+            request_freedom: {
+                text: `
+                    <div class="character-image-placeholder" style="width:240px;height:240px;float:left;margin:0 1.8rem 1.2rem 0;background:var(--choice-bg);border-radius:16px;display:flex;align-items:center;justify-content:center;border:2px solid var(--glass-border);">
+                        <i class="fas fa-freedom" style="font-size:3rem;color:var(--primary-color);"></i>
+                    </div>
+                    <p>نگهبان پس از شنیدن درخواست تو، مدتی در سکوت به تو نگاه می‌کند. سپس آهی می‌کشد و می‌گوید:</p>
+                    <p class="dialogue">"من و چند تن از نگهبانان دیگر از ظلم جمشید به ستوه آمده‌ایم. ما تو را آزاد خواهیم کرد، اما باید به ما قول بدهی که برای نجات ایران بکوشی."</p>
+                    <p>تو با اشتیاق موافقت می‌کنی. آن شب، نگهبانان تو را از زندان آزاد می‌کنند و اسلحه و اسبی در اختیارت می‌گذارند.</p>
+                    <p>هوا تاریک و ماه کامل در آسمان می‌درخشد. باید تصمیم بگیری که به کجا بروی...</p>
+                `,
+                choices: [
+                    {
+                        text: "به سوی پایتخت می‌روی تا از وضعیت مطلع شوی",
+                        next: "to_capital",
+                        effects: { courage: 10, wisdom: 5, loyalty: 10 }
+                    },
+                    {
+                        text: "به دنبال دیگر نجیب‌زادگان وفادار به ایران می‌گردی",
+                        next: "find_nobles",
+                        effects: { wisdom: 15, loyalty: 10, courage: 5 }
+                    },
+                    {
+                        text: "مستقیماً به دنبال کاوه آهنگر می‌روی",
+                        next: "search_kaveh",
+                        effects: { courage: 10, wisdom: 10, loyalty: 15 }
+                    },
+                    {
+                        text: "به کوهستان می‌روی تا فریدون را پیدا کنی",
+                        next: "find_fereydun",
+                        effects: { courage: 5, wisdom: 15, loyalty: 20 }
+                    }
+                ]
+            }
+        };
+
+        // متغیرهای وضعیت
+        let currentStoryId = 'start';
+        let storyHistory = [];
+        let playerStats = {
+            courage: 50,
+            wisdom: 50,
+            loyalty: 50,
+            fate: 50
+        };
+        let playerName = 'قهرمان ناشناس';
+        let gameProgress = 0;
+        let totalStoryNodes = Object.keys(storyData).length;
+        let autoScrollEnabled = false;
+        let backgroundMusicEnabled = false;
+        let soundEffectsEnabled = true;
+        let animationsEnabled = true;
+        let saveChoicesEnabled = true;
+
+        // نمایش صفحه
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.content-page, #main-menu');
+            pages.forEach(page => {
+                page.style.display = 'none';
+            });
+            
+            if (pageId === 'main-menu') {
+                document.getElementById('main-menu').style.display = 'flex';
+                window.scrollTo(0, 0);
+            } else {
+                document.getElementById(pageId).style.display = 'block';
+            }
+            
+            if (pageId === 'story-page') {
+                loadStory(currentStoryId);
+            }
+            
+            if (soundEffectsEnabled) {
+                playSound('click-sound');
+            }
+        }
+
+        // بارگذاری داستان
+        function loadStory(storyId) {
+            const story = storyData[storyId];
+            if (!story) return;
+            
+            storyHistory.push(storyId);
+            
+            const storyTextElement = document.getElementById('story-text');
+            if (animationsEnabled) {
+                storyTextElement.classList.add('fade-in');
+            }
+            
+            let storyText = story.text;
+            storyText = storyText.replace(/\[نام تو\]/g, playerName);
+            
+            storyTextElement.innerHTML = storyText;
+            
+            const choicesContainer = document.getElementById('choices-container');
+            choicesContainer.innerHTML = '';
+            
+            story.choices.forEach(choice => {
+                const button = document.createElement('button');
+                button.className = 'choice-btn';
+                if (animationsEnabled) {
+                    button.classList.add('slide-in-right');
+                }
+                button.textContent = choice.text;
+                button.onclick = () => {
+                    if (choice.effects) {
+                        applyEffects(choice.effects);
+                    }
+                    
+                    currentStoryId = choice.next;
+                    if (choice.next === 'main_menu') {
+                        showPage('main-menu');
+                    } else {
+                        loadStory(choice.next);
+                    }
+                    
+                    if (soundEffectsEnabled) {
+                        playSound('click-sound');
+                    }
+                    
+                    if (saveChoicesEnabled) {
+                        autoSave();
+                    }
+                };
+                choicesContainer.appendChild(button);
+            });
+            
+            document.getElementById('current-page').textContent = storyHistory.length;
+            
+            updateProgress();
+            
+            if (autoScrollEnabled) {
+                window.scrollTo(0, 0);
+            }
+            
+            setTimeout(() => {
+                storyTextElement.classList.remove('fade-in');
+                const choiceButtons = document.querySelectorAll('.choice-btn');
+                choiceButtons.forEach(btn => {
+                    btn.classList.remove('slide-in-right');
+                });
+            }, 1000);
+        }
+
+        // اعمال اثرات انتخاب
+        function applyEffects(effects) {
+            for (const stat in effects) {
+                if (playerStats.hasOwnProperty(stat)) {
+                    playerStats[stat] = Math.max(0, Math.min(100, playerStats[stat] + effects[stat]));
+                    updateStatusBar();
+                    
+                    if (soundEffectsEnabled) {
+                        if (effects[stat] > 0) {
+                            playSound('success-sound');
+                        } else if (effects[stat] < 0) {
+                            playSound('danger-sound');
+                        }
+                    }
+                }
+            }
+        }
+
+        // به‌روزرسانی نوار وضعیت
+        function updateStatusBar() {
+            document.getElementById('courage-value').textContent = playerStats.courage;
+            document.getElementById('wisdom-value').textContent = playerStats.wisdom;
+            document.getElementById('loyalty-value').textContent = playerStats.loyalty;
+            document.getElementById('fate-value').textContent = playerStats.fate;
+            
+            document.getElementById('courage-bar').style.width = playerStats.courage + '%';
+            document.getElementById('wisdom-bar').style.width = playerStats.wisdom + '%';
+            document.getElementById('loyalty-bar').style.width = playerStats.loyalty + '%';
+            document.getElementById('fate-bar').style.width = playerStats.fate + '%';
+        }
+
+        // به‌روزرسانی پیشرفت داستان
+        function updateProgress() {
+            const uniqueNodes = [...new Set(storyHistory)];
+            gameProgress = Math.min(100, Math.round((uniqueNodes.length / totalStoryNodes) * 100));
+            document.getElementById('story-progress').style.width = gameProgress + '%';
+        }
+
+        // تغییر تم
+        function changeTheme(theme) {
+            if (theme === 'light') {
+                document.documentElement.style.setProperty('--text-color', '#2F2F2F');
+                document.documentElement.style.setProperty('--bg-color', '#F5F5DC');
+                document.documentElement.style.setProperty('--glass-bg', 'rgba(255, 255, 255, 0.7)');
+                document.documentElement.style.setProperty('--choice-bg', 'rgba(139, 69, 19, 0.1)');
+            } else if (theme === 'dark') {
+                document.documentElement.style.setProperty('--text-color', '#F5F5DC');
+                document.documentElement.style.setProperty('--bg-color', '#0A0A0A');
+                document.documentElement.style.setProperty('--glass-bg', 'rgba(255, 255, 255, 0.08)');
+                document.documentElement.style.setProperty('--choice-bg', 'rgba(184, 134, 11, 0.25)');
+            } else if (theme === 'sepia') {
+                document.documentElement.style.setProperty('--text-color', '#5C4B37');
+                document.documentElement.style.setProperty('--bg-color', '#F4ECD8');
+                document.documentElement.style.setProperty('--glass-bg', 'rgba(255, 255, 255, 0.6)');
+                document.documentElement.style.setProperty('--choice-bg', 'rgba(139, 69, 19, 0.15)');
+            }
+            localStorage.setItem('theme', theme);
+        }
+
+        // تغییر فونت
+        function changeFont(font) {
+            if (font === 'Iranian Nastaliq') {
+                document.body.classList.add('nastaliq');
+            } else {
+                document.body.classList.remove('nastaliq');
+                document.documentElement.style.setProperty('--font-family', font);
+            }
+            localStorage.setItem('font', font);
+        }
+
+        // تغییر اندازه فونت
+        function changeFontSize(size) {
+            document.documentElement.style.setProperty('--font-size', size + 'px');
+            document.getElementById('font-size-value').textContent = size + 'px';
+            localStorage.setItem('fontSize', size);
+        }
+
+        // تغییر فاصله خطوط
+        function changeLineHeight(height) {
+            document.documentElement.style.setProperty('--line-height', height);
+            document.getElementById('line-height-value').textContent = height;
+            localStorage.setItem('lineHeight', height);
+        }
+
+        // تغییر وضعیت اسکرول خودکار
+        function toggleAutoScroll(enabled) {
+            autoScrollEnabled = enabled;
+            localStorage.setItem('autoScroll', enabled);
+        }
+
+        // تغییر وضعیت موسیقی زمینه
+        function toggleBackgroundMusic(enabled) {
+            backgroundMusicEnabled = enabled;
+            const music = document.getElementById('background-music');
+            
+            if (enabled) {
+                music.play().catch(e => console.log('Autoplay prevented:', e));
+            } else {
+                music.pause();
+            }
+            
+            localStorage.setItem('backgroundMusic', enabled);
+        }
+
+        // تغییر وضعیت افکت‌های صوتی
+        function toggleSoundEffects(enabled) {
+            soundEffectsEnabled = enabled;
+            localStorage.setItem('soundEffects', enabled);
+        }
+
+        // تغییر وضعیت انیمیشن‌ها
+        function toggleAnimations(enabled) {
+            animationsEnabled = enabled;
+            localStorage.setItem('animations', enabled);
+        }
+
+        // تغییر وضعیت ذخیره خودکار
+        function toggleSaveChoices(enabled) {
+            saveChoicesEnabled = enabled;
+            localStorage.setItem('saveChoices', enabled);
+        }
+
+        // پخش صدا
+        function playSound(soundId) {
+            if (!soundEffectsEnabled) return;
+            
+            const sound = document.getElementById(soundId);
+            sound.currentTime = 0;
+            sound.play().catch(e => console.log('Sound play prevented:', e));
+        }
+
+        // نمایش پاپ‌آپ
+        function showPopup(popupId) {
+            document.getElementById('popup-overlay').style.display = 'block';
+            document.getElementById(popupId).style.display = 'block';
+        }
+
+        // بستن پاپ‌آپ با افکت محو شونده
+        function closePopupWithFade(popupId) {
+            const popup = document.getElementById(popupId);
+            popup.classList.add('fade-out');
+            
+            setTimeout(() => {
+                popup.classList.remove('fade-out');
+                document.getElementById('popup-overlay').style.display = 'none';
+                popup.style.display = 'none';
+            }, 500);
+        }
+
+        // نمایش پنجره شناور (Toast)
+        function showToast(title, message) {
+            const toastContainer = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `
+                <h3>${title}</h3>
+                <p>${message}</p>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 2500);
+            
+            if (soundEffectsEnabled) {
+                playSound('click-sound');
+            }
+        }
+
+        // شروع بازی جدید
+        function startNewGame() {
+            showPopup('name-popup');
+        }
+
+        // تأیید نام بازیکن
+        function confirmPlayerName() {
+            const nameInput = document.getElementById('player-name-input');
+            if (nameInput.value.trim()) {
+                playerName = nameInput.value.trim();
+                currentStoryId = 'start';
+                storyHistory = [];
+                playerStats = {
+                    courage: 50,
+                    wisdom: 50,
+                    loyalty: 50,
+                    fate: 50
+                };
+                updateStatusBar();
+                closePopupWithFade('name-popup');
+                showPage('story-page');
+                showToast('شروع بازی جدید', `بازی جدید با نام "${playerName}" شروع شد!`);
+            } else {
+                showToast('خطا', 'لطفاً نام معتبری وارد کنید.');
+            }
+        }
+
+        // ادامه بازی
+        function continueGame() {
+            const savedGame = localStorage.getItem('shahnamehNovelSave');
+            if (savedGame) {
+                try {
+                    const gameData = JSON.parse(savedGame);
+                    currentStoryId = gameData.currentStoryId || 'start';
+                    storyHistory = gameData.storyHistory || [];
+                    playerStats = gameData.playerStats || {
+                        courage: 50,
+                        wisdom: 50,
+                        loyalty: 50,
+                        fate: 50
+                    };
+                    playerName = gameData.playerName || 'قهرمان ناشناس';
+                    updateStatusBar();
+                    showPage('story-page');
+                    showToast('ادامه بازی', `بازی "${playerName}" با موفقیت بارگذاری شد.`);
+                } catch (error) {
+                    console.error('Error loading saved game:', error);
+                    showToast('خطا', 'خطا در بارگذاری بازی ذخیره شده.');
+                }
+            } else {
+                showToast('خطا', 'هیچ بازی ذخیره شده‌ای پیدا نشد. لطفاً یک بازی جدید شروع کنید.');
+            }
+        }
+
+        // ذخیره خودکار
+        function autoSave() {
+            if (saveChoicesEnabled) {
+                saveGame();
+            }
+        }
+
+        // ذخیره بازی
+        function saveGame() {
+            const gameData = {
+                currentStoryId: currentStoryId,
+                storyHistory: storyHistory,
+                playerStats: playerStats,
+                playerName: playerName,
+                timestamp: new Date().toISOString()
+            };
+            
+            localStorage.setItem('shahnamehNovelSave', JSON.stringify(gameData));
+            closePopupWithFade('save-popup');
+            showToast('ذخیره بازی', 'بازی با موفقیت ذخیره شد.');
+        }
+
+        // بارگذاری بازی
+        function loadGame() {
+            continueGame();
+            closePopupWithFade('load-popup');
+        }
+
+        // بازنشانی پیشرفت
+        function resetProgress() {
+            if (confirm('آیا مطمئن هستید که می‌خواهید تمام پیشرفت خود را بازنشانی کنید؟ این عمل غیرقابل بازگشت است.')) {
+                localStorage.removeItem('shahnamehNovelSave');
+                currentStoryId = 'start';
+                storyHistory = [];
+                playerStats = {
+                    courage: 50,
+                    wisdom: 50,
+                    loyalty: 50,
+                    fate: 50
+                };
+                updateStatusBar();
+                showToast('بازنشانی', 'پیشرفت بازی بازنشانی شد.');
+            }
+        }
+
+        // صدور اطلاعات ذخیره
+        function exportSaveData() {
+            const savedGame = localStorage.getItem('shahnamehNovelSave');
+            if (savedGame) {
+                const blob = new Blob([savedGame], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'shahnameh_novel_save.json';
+                a.click();
+                URL.revokeObjectURL(url);
+                showToast('صدور اطلاعات', 'اطلاعات ذخیره با موفقیت صادر شد.');
+            } else {
+                showToast('خطا', 'هیچ اطلاعات ذخیره‌ای برای صدور وجود ندارد.');
+            }
+        }
+
+        // ورود اطلاعات ذخیره
+        function importSaveData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = e => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = event => {
+                    try {
+                        const gameData = JSON.parse(event.target.result);
+                        localStorage.setItem('shahnamehNovelSave', JSON.stringify(gameData));
+                        showToast('ورود اطلاعات', 'اطلاعات ذخیره با موفقیت وارد شد.');
+                    } catch (error) {
+                        showToast('خطا', 'خطا در وارد کردن اطلاعات ذخیره. لطفاً مطمئن شوید که فایل معتبر است.');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        // خروج از برنامه
+        function exitApp() {
+            if (confirm('آیا مطمئن هستید که می‌خواهید از برنامه خارج شوید؟')) {
+                if (saveChoicesEnabled) {
+                    saveGame();
+                }
+                
+                window.close();
+                
+                if (!window.closed) {
+                    showToast('خروج', 'برای خروج، پنجره مرورگر را ببندید.');
+                }
+            }
+        }
+
+        // بارگذاری تنظیمات ذخیره شده
+        function loadSettings() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.getElementById('theme-select').value = savedTheme;
+                changeTheme(savedTheme);
+            }
+            
+            const savedFont = localStorage.getItem('font');
+            if (savedFont) {
+                document.getElementById('font-select').value = savedFont;
+                changeFont(savedFont);
+            }
+            
+            const savedFontSize = localStorage.getItem('fontSize');
+            if (savedFontSize) {
+                document.getElementById('font-size').value = savedFontSize;
+                changeFontSize(savedFontSize);
+            }
+            
+            const savedLineHeight = localStorage.getItem('lineHeight');
+            if (savedLineHeight) {
+                document.getElementById('line-height').value = savedLineHeight;
+                changeLineHeight(savedLineHeight);
+            }
+            
+            const savedAutoScroll = localStorage.getItem('autoScroll');
+            if (savedAutoScroll) {
+                document.getElementById('auto-scroll').checked = savedAutoScroll === 'true';
+                autoScrollEnabled = savedAutoScroll === 'true';
+            }
+            
+            const savedBackgroundMusic = localStorage.getItem('backgroundMusic');
+            if (savedBackgroundMusic) {
+                document.getElementById('background-music').checked = savedBackgroundMusic === 'true';
+                backgroundMusicEnabled = savedBackgroundMusic === 'true';
+                if (backgroundMusicEnabled) {
+                    toggleBackgroundMusic(true);
+                }
+            }
+            
+            const savedSoundEffects = localStorage.getItem('soundEffects');
+            if (savedSoundEffects) {
+                document.getElementById('sound-effects').checked = savedSoundEffects === 'true';
+                soundEffectsEnabled = savedSoundEffects === 'true';
+            }
+            
+            const savedAnimations = localStorage.getItem('animations');
+            if (savedAnimations) {
+                document.getElementById('animations').checked = savedAnimations === 'true';
+                animationsEnabled = savedAnimations === 'true';
+            }
+            
+            const savedSaveChoices = localStorage.getItem('saveChoices');
+            if (savedSaveChoices) {
+                document.getElementById('save-choices').checked = savedSaveChoices === 'true';
+                saveChoicesEnabled = savedSaveChoices === 'true';
+            }
+        }
+
+        // شروع برنامه
+        window.onload = function() {
+            loadSettings();
+            
+            setTimeout(() => {
+                document.getElementById('splash-screen').style.display = 'none';
+                document.getElementById('main-menu').style.display = 'flex';
+            }, 4000);
+        };
+    </script>
+</body>
+</html>

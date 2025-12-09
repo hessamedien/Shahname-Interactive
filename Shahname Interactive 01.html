@@ -1,0 +1,2669 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>افسانه‌های شاهنامه - رمان تعاملی پیشرفته</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* فونت‌های فارسی */
+        @import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css');
+        @import url('https://cdn.jsdelivr.net/gh/rastikerdar/shabnam-font@v5.0.1/dist/font-face.css');
+        
+        /* متغیرهای CSS برای تم‌ها */
+        :root {
+            --primary-color: #c19a53;
+            --secondary-color: #8B4513;
+            --accent-color: #d4af37;
+            --text-color: #f5f5f5;
+            --bg-color: #1a1a1a;
+            --header-bg: rgba(25, 25, 25, 0.9);
+            --header-text: #f5f5f5;
+            --footer-bg: rgba(25, 25, 25, 0.9);
+            --footer-text: #f5f5f5;
+            --button-bg: #c19a53;
+            --button-text: #1a1a1a;
+            --button-hover: #d4af37;
+            --choice-bg: rgba(193, 154, 83, 0.2);
+            --choice-hover: rgba(193, 154, 83, 0.4);
+            --font-family: 'Vazir', 'Shabnam', Tahoma, sans-serif;
+            --font-size: 18px;
+            --line-height: 1.8;
+            --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --border-radius: 20px;
+            --shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            --page-width: 1200px;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            --gradient-primary: linear-gradient(135deg, #c19a53 0%, #d4af37 50%, #f5d47c 100%);
+            --gradient-bg: linear-gradient(135deg, #1a1a1a 0%, #2d1b0e 100%);
+        }
+        
+        /* استایل‌های پایه */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: var(--font-family);
+            font-size: var(--font-size);
+            line-height: var(--line-height);
+            color: var(--text-color);
+            background: var(--gradient-bg);
+            transition: var(--transition);
+            overflow-x: hidden;
+            min-height: 100vh;
+            background-attachment: fixed;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* صفحه آغازین - طراحی مدرن‌تر */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9)), 
+                        url('https://images.unsplash.com/photo-1542736667-069246bdbc6d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            color: #FFF8DC;
+            text-align: center;
+        }
+        
+        #splash-screen h1 {
+            font-size: 4.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.8);
+            animation: fadeInUp 1.5s ease-in-out;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+        
+        #splash-screen h2 {
+            font-size: 2.8rem;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+            animation: fadeInUp 1.8s ease-in-out 0.3s both;
+            margin-bottom: 3rem;
+            font-weight: 300;
+        }
+        
+        .splash-subtitle {
+            font-size: 1.6rem;
+            opacity: 0.9;
+            margin-bottom: 4rem;
+            animation: fadeIn 2.5s ease-in-out 0.6s both;
+            font-weight: 300;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+        
+        .loading-bar {
+            width: 400px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 2rem;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        .loading-progress {
+            height: 100%;
+            width: 0%;
+            background: var(--gradient-primary);
+            border-radius: 10px;
+            animation: loading 3.5s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+            box-shadow: 0 0 20px rgba(193, 154, 83, 0.5);
+        }
+        
+        @keyframes loading {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0% { 
+                transform: scale(1);
+                box-shadow: 0 0 20px rgba(193, 154, 83, 0.5);
+            }
+            50% { 
+                transform: scale(1.05);
+                box-shadow: 0 0 40px rgba(193, 154, 83, 0.8);
+            }
+            100% { 
+                transform: scale(1);
+                box-shadow: 0 0 20px rgba(193, 154, 83, 0.5);
+            }
+        }
+        
+        /* صفحه اصلی - طراحی مدرن‌تر */
+        #main-menu {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)), 
+                        url('https://images.unsplash.com/photo-1542736667-069246bdbc6d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') no-repeat center center;
+            background-size: cover;
+            color: #FFF8DC;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-menu-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(193, 154, 83, 0.25) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(212, 175, 55, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(139, 69, 19, 0.15) 0%, transparent 50%);
+            z-index: -1;
+            animation: gradientShift 15s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { 
+                background: 
+                    radial-gradient(circle at 20% 50%, rgba(193, 154, 83, 0.25) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(212, 175, 55, 0.2) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 80%, rgba(139, 69, 19, 0.15) 0%, transparent 50%);
+            }
+            50% { 
+                background: 
+                    radial-gradient(circle at 30% 60%, rgba(193, 154, 83, 0.25) 0%, transparent 50%),
+                    radial-gradient(circle at 70% 30%, rgba(212, 175, 55, 0.2) 0%, transparent 50%),
+                    radial-gradient(circle at 50% 70%, rgba(139, 69, 19, 0.15) 0%, transparent 50%);
+            }
+            100% { 
+                background: 
+                    radial-gradient(circle at 20% 50%, rgba(193, 154, 83, 0.25) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(212, 175, 55, 0.2) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 80%, rgba(139, 69, 19, 0.15) 0%, transparent 50%);
+            }
+        }
+        
+        .logo-container {
+            position: relative;
+            margin-bottom: 4rem;
+        }
+        
+        .logo {
+            width: 380px;
+            height: 200px;
+            background: linear-gradient(135deg, rgba(193, 154, 83, 0.25), rgba(139, 69, 19, 0.35));
+            border-radius: 24px;
+            box-shadow: 
+                0 0 60px rgba(193, 154, 83, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            animation: pulse 4s infinite;
+            border: 2px solid rgba(212, 175, 55, 0.4);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            animation: shine 6s infinite;
+        }
+        
+        .logo-text {
+            font-size: 3.2rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+        }
+        
+        .logo-subtitle {
+            font-size: 1.3rem;
+            color: #f5f5f5;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            20% { transform: translateX(100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .title {
+            font-size: 4rem;
+            margin-bottom: 3rem;
+            text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.7);
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+        
+        .subtitle {
+            font-size: 1.6rem;
+            margin-bottom: 4rem;
+            opacity: 0.9;
+            max-width: 700px;
+            line-height: 1.7;
+            font-weight: 300;
+        }
+        
+        .menu-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.8rem;
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .menu-btn {
+            padding: 1.8rem 2.2rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            color: var(--button-text);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font-family);
+            box-shadow: var(--glass-shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            position: relative;
+            overflow: hidden;
+            font-weight: 500;
+        }
+        
+        .menu-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            z-index: -1;
+            transition: var(--transition);
+            opacity: 0;
+        }
+        
+        .menu-btn:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border-color: rgba(212, 175, 55, 0.6);
+            color: #1a1a1a;
+        }
+        
+        .menu-btn:hover::before {
+            opacity: 1;
+        }
+        
+        .menu-btn i {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            transition: var(--transition);
+        }
+        
+        .menu-btn:hover i {
+            transform: scale(1.2);
+        }
+        
+        /* صفحات محتوا - طراحی شیشه‌ای پیشرفته */
+        .content-page {
+            display: none;
+            padding: 2.5rem;
+            max-width: var(--page-width);
+            margin: 0 auto;
+            min-height: 100vh;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .page-header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            color: var(--header-text);
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 2.5rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: var(--gradient-primary);
+        }
+        
+        .page-header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.8rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+        
+        .page-content {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 3rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 2.5rem;
+            border: 1px solid var(--glass-border);
+            animation: slideInUp 0.8s ease-out;
+        }
+        
+        .page-footer {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            color: var(--footer-text);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            font-size: 1rem;
+            border: 1px solid var(--glass-border);
+        }
+        
+        /* صفحه داستان - طراحی پیشرفته‌تر */
+        .story-container {
+            position: relative;
+            padding: 3rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 2.5rem;
+            border: 1px solid var(--glass-border);
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .story-text {
+            margin-bottom: 2.5rem;
+            text-align: justify;
+            font-size: 1.15rem;
+            line-height: 1.9;
+        }
+        
+        .character-image {
+            width: 240px;
+            height: 240px;
+            float: left;
+            margin: 0 1.8rem 1.2rem 0;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 2px solid rgba(212, 175, 55, 0.4);
+            object-fit: cover;
+            transition: var(--transition);
+        }
+        
+        .character-image:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .location-image {
+            width: 100%;
+            max-height: 450px;
+            object-fit: cover;
+            border-radius: 16px;
+            margin: 2rem 0;
+            box-shadow: var(--shadow);
+            border: 2px solid rgba(212, 175, 55, 0.4);
+            transition: var(--transition);
+        }
+        
+        .location-image:hover {
+            transform: scale(1.02);
+        }
+        
+        .choices-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+        
+        .choice-btn {
+            padding: 1.5rem 2rem;
+            background: var(--choice-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: var(--text-color);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: var(--border-radius);
+            font-size: 1.15rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: right;
+            font-family: var(--font-family);
+            box-shadow: var(--glass-shadow);
+            position: relative;
+            overflow: hidden;
+            font-weight: 500;
+        }
+        
+        .choice-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 6px;
+            height: 100%;
+            background: var(--gradient-primary);
+            transition: var(--transition);
+        }
+        
+        .choice-btn:hover {
+            background: var(--choice-hover);
+            transform: translateX(-12px) scale(1.02);
+            border-color: rgba(212, 175, 55, 0.6);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .choice-btn:hover::before {
+            width: 10px;
+        }
+        
+        /* نوار وضعیت - طراحی مدرن‌تر */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 1.5rem 2rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+            animation: slideInDown 0.8s ease-out;
+        }
+        
+        .status-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            padding: 0 1.2rem;
+        }
+        
+        .status-label {
+            font-size: 1rem;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-weight: 500;
+        }
+        
+        .status-value {
+            font-weight: bold;
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+        }
+        
+        .status-bar-container {
+            position: relative;
+            width: 100%;
+            height: 14px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
+        }
+        
+        .status-bar-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .status-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 2.5s infinite;
+        }
+        
+        .courage-bar { 
+            background: linear-gradient(to right, #8B0000, #C62828, #FF5252);
+        }
+        
+        .wisdom-bar { 
+            background: linear-gradient(to right, #0D47A1, #1565C0, #42A5F5);
+        }
+        
+        .loyalty-bar { 
+            background: linear-gradient(to right, #1B5E20, #2E7D32, #66BB6A);
+        }
+        
+        .fate-bar { 
+            background: linear-gradient(to right, #4A148C, #6A1B9A, #AB47BC);
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        /* پیشرفت داستان */
+        .progress-container {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            margin: 2rem 0;
+            overflow: hidden;
+            height: 12px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            transition: width 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+            animation: shimmer 2.5s infinite;
+        }
+        
+        /* دکمه شناور */
+        .floating-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            background: var(--gradient-primary);
+            color: #1a1a1a;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            z-index: 100;
+            transition: var(--transition);
+            font-size: 1.8rem;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .floating-btn:hover {
+            transform: scale(1.15) rotate(90deg);
+            box-shadow: 0 15px 30px rgba(193, 154, 83, 0.7);
+        }
+        
+        /* پاپ‌آپ‌ها و اطلاعیه‌ها */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 3rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            max-width: 550px;
+            width: 90%;
+            display: none;
+            border: 1px solid var(--glass-border);
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 999;
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .popup-buttons {
+            display: flex;
+            gap: 1.2rem;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+        
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+        
+        /* صفحه بارگذاری */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-bg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        
+        .spinner {
+            width: 80px;
+            height: 80px;
+            border: 6px solid rgba(193, 154, 83, 0.3);
+            border-radius: 50%;
+            border-top-color: #c19a53;
+            animation: spin 1.2s ease-in-out infinite;
+            margin-bottom: 2.5rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* انیمیشن‌های ویژه */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .slide-in-right {
+            animation: slideInRight 0.6s ease-out;
+        }
+        
+        .slide-in-up {
+            animation: slideInUp 0.6s ease-out;
+        }
+        
+        .slide-in-down {
+            animation: slideInDown 0.6s ease-out;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .highlight {
+            background: linear-gradient(135deg, rgba(193, 154, 83, 0.3), rgba(212, 175, 55, 0.15));
+            padding: 0.4rem 1rem;
+            border-radius: 8px;
+            border-right: 4px solid #c19a53;
+            font-weight: 500;
+        }
+        
+        .important {
+            color: #d4af37;
+            font-weight: bold;
+        }
+        
+        .dialogue {
+            font-style: italic;
+            margin: 2rem 0;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: var(--border-radius);
+            border-right: 5px solid #c19a53;
+            position: relative;
+            line-height: 1.9;
+        }
+        
+        .dialogue::before {
+            content: '"';
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 4rem;
+            color: rgba(193, 154, 83, 0.5);
+            font-family: serif;
+            line-height: 1;
+        }
+        
+        .narrative {
+            font-weight: bold;
+            color: #d4af37;
+            font-size: 1.3rem;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: var(--border-radius);
+            border-right: 4px solid #8B4513;
+            line-height: 1.8;
+        }
+        
+        /* کارت‌های شخصیت */
+        .character-profile {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .character-profile h2 {
+            color: #d4af37;
+            font-size: 2rem;
+            border-bottom: 3px solid rgba(212, 175, 55, 0.4);
+            padding-bottom: 0.8rem;
+            font-weight: 700;
+        }
+        
+        .character-details {
+            display: flex;
+            gap: 2.5rem;
+        }
+        
+        .character-info {
+            flex: 1;
+        }
+        
+        .character-stats {
+            display: flex;
+            gap: 1.2rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .stat-tag {
+            background: rgba(193, 154, 83, 0.25);
+            padding: 0.5rem 1.2rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+        
+        /* تنظیمات */
+        .settings-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .setting-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.2rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .setting-label {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        
+        .setting-select, .setting-input {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            padding: 0.7rem 1rem;
+            color: var(--text-color);
+            font-family: var(--font-family);
+            font-size: 1rem;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+        
+        .setting-select:focus, .setting-input:focus {
+            outline: none;
+            border-color: rgba(212, 175, 55, 0.6);
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+        }
+        
+        /* سازگاری با موبایل */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 3rem;
+            }
+            
+            #splash-screen h1 {
+                font-size: 3.2rem;
+            }
+            
+            #splash-screen h2 {
+                font-size: 2.2rem;
+            }
+            
+            .splash-subtitle {
+                font-size: 1.3rem;
+                padding: 0 1rem;
+            }
+            
+            .loading-bar {
+                width: 300px;
+            }
+            
+            .menu-buttons {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+            
+            .content-page {
+                padding: 1.5rem;
+            }
+            
+            .page-content {
+                padding: 2rem;
+            }
+            
+            .story-container {
+                padding: 2rem;
+            }
+            
+            .character-image {
+                float: none;
+                display: block;
+                margin: 0 auto 1.8rem;
+                width: 100%;
+                max-width: 300px;
+                height: auto;
+            }
+            
+            .status-bar {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .character-details {
+                flex-direction: column;
+            }
+            
+            .logo {
+                width: 300px;
+                height: 170px;
+            }
+            
+            .logo-text {
+                font-size: 2.5rem;
+            }
+            
+            .logo-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .setting-group {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .floating-btn {
+                width: 60px;
+                height: 60px;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+        
+        /* اسکرول بار سفارشی */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-primary);
+            border-radius: 6px;
+            border: 2px solid rgba(0, 0, 0, 0.2);
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to bottom, #d4af37, #c19a53, #8B4513);
+        }
+
+        /* بهبودهای جدید */
+        
+        /* بهبود انیمیشن‌ها */
+        .animated-element {
+            animation-duration: 0.8s;
+            animation-fill-mode: both;
+        }
+        
+        /* بهبود کارت‌ها */
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+            transition: var(--transition);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* بهبود تایپوگرافی */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 1rem;
+        }
+        
+        p {
+            margin-bottom: 1.5rem;
+        }
+        
+        /* بهبود فرم‌ها */
+        input[type="text"], input[type="email"], textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-family: var(--font-family);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
+            outline: none;
+            border-color: rgba(212, 175, 55, 0.6);
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+        }
+        
+        /* بهبود دکمه‌ها */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2rem;
+            background: var(--gradient-primary);
+            color: #1a1a1a;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font-family);
+            font-weight: 600;
+            text-decoration: none;
+            gap: 0.5rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(193, 154, 83, 0.4);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--text-color);
+            border: 2px solid var(--primary-color);
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: #1a1a1a;
+        }
+        
+        /* بهبود ناوبری */
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-tab {
+            padding: 1rem 1.5rem;
+            background: transparent;
+            color: var(--text-color);
+            border: none;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font-family);
+            font-size: 1rem;
+        }
+        
+        .nav-tab.active {
+            background: var(--glass-bg);
+            color: var(--accent-color);
+            border-bottom: 3px solid var(--accent-color);
+        }
+        
+        .nav-tab:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        /* بهبود جدول‌ها */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: right;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        th {
+            background: rgba(0, 0, 0, 0.3);
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        /* بهبود لیست‌ها */
+        ul, ol {
+            margin-bottom: 1.5rem;
+            padding-right: 1.5rem;
+        }
+        
+        li {
+            margin-bottom: 0.5rem;
+        }
+        
+        /* بهبود بلوک نقل قول */
+        blockquote {
+            border-right: 4px solid var(--accent-color);
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            font-style: italic;
+        }
+        
+        /* بهبود کد */
+        code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        
+        pre {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        /* بهبود آیکون‌ها */
+        .icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            background: var(--gradient-primary);
+            color: #1a1a1a;
+            border-radius: 50%;
+            font-size: 1.2rem;
+        }
+        
+        /* بهبود نوار جستجو */
+        .search-bar {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 1rem 3rem 1rem 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: var(--border-radius);
+            color: var(--text-color);
+            font-family: var(--font-family);
+            font-size: 1rem;
+        }
+        
+        .search-bar i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent-color);
+        }
+        
+        /* بهبود نوت‌ها */
+        .note {
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .note-info {
+            background: rgba(33, 150, 243, 0.2);
+            border-right: 4px solid #2196F3;
+        }
+        
+        .note-success {
+            background: rgba(76, 175, 80, 0.2);
+            border-right: 4px solid #4CAF50;
+        }
+        
+        .note-warning {
+            background: rgba(255, 152, 0, 0.2);
+            border-right: 4px solid #FF9800;
+        }
+        
+        .note-danger {
+            background: rgba(244, 67, 54, 0.2);
+            border-right: 4px solid #F44336;
+        }
+        
+        /* بهبود گالری */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .gallery-item {
+            position: relative;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            aspect-ratio: 1;
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+        
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            padding: 1rem;
+            color: white;
+            transform: translateY(100%);
+            transition: var(--transition);
+        }
+        
+        .gallery-item:hover .gallery-caption {
+            transform: translateY(0);
+        }
+        
+        /* بهبود مدال */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+        
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: translateY(50px);
+            transition: var(--transition);
+        }
+        
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* بهبود تگ‌ها */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tag {
+            background: rgba(193, 154, 83, 0.25);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+        }
+        
+        /* بهبود جداکننده */
+        .divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 2rem 0;
+        }
+        
+        /* بهبود آواتار */
+        .avatar {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .avatar-lg {
+            width: 5rem;
+            height: 5rem;
+        }
+        
+        .avatar-xl {
+            width: 8rem;
+            height: 8rem;
+        }
+        
+        /* بهبود رتبه‌بندی */
+        .rating {
+            display: flex;
+            gap: 0.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .rating-star {
+            color: #d4af37;
+        }
+        
+        .rating-star.empty {
+            color: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* بهبود اسلایدر */
+        .slider {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        
+        .slider-track {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            position: relative;
+        }
+        
+        .slider-fill {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 3px;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+        
+        .slider-thumb {
+            width: 20px;
+            height: 20px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* بهبود ترنزیشن‌های صفحه */
+        .page-transition-enter {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .page-transition-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.5s, transform 0.5s;
+        }
+        
+        .page-transition-exit {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .page-transition-exit-active {
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.5s, transform 0.5s;
+        }
+        
+        /* بهبود فیدبک لمسی */
+        @media (hover: hover) {
+            .hover-effect {
+                transition: var(--transition);
+            }
+            
+            .hover-effect:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            }
+        }
+        
+        /* بهبود دسترسی */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        /* بهبود فوکوس */
+        button:focus-visible,
+        input:focus-visible,
+        select:focus-visible,
+        textarea:focus-visible {
+            outline: 2px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+        
+        /* بهبود کنتراست برای خوانایی بهتر */
+        .high-contrast {
+            --text-color: #ffffff;
+            --bg-color: #000000;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- صفحه آغازین -->
+    <div id="splash-screen">
+        <h1>افسانه‌های شاهنامه</h1>
+        <h2>رمان تعاملی پیشرفته</h2>
+        <p class="splash-subtitle">تجربه‌ای مدرن و خاطره‌انگیز از داستان‌های کهن ایران زمین</p>
+        <div class="loading-bar">
+            <div class="loading-progress"></div>
+        </div>
+    </div>
+
+    <!-- صفحه بارگذاری -->
+    <div id="loading-screen" class="loading-screen" style="display: none;">
+        <div class="spinner"></div>
+        <p>در حال بارگذاری داستان...</p>
+    </div>
+
+    <!-- منوی اصلی -->
+    <div id="main-menu">
+        <div class="main-menu-bg"></div>
+        <div class="logo-container">
+            <div class="logo">
+                <div class="logo-text">افسانه‌های شاهنامه</div>
+                <div class="logo-subtitle">حماسه‌ای جاودان در قالبی مدرن</div>
+            </div>
+        </div>
+        <p class="subtitle">رمان تعاملی بر اساس شاهنامه فردوسی با رابط کاربری پیشرفته و تجربه‌ای بی‌نظیر</p>
+        <div class="menu-buttons">
+            <button class="menu-btn" onclick="startNewGame()">
+                <i class="fas fa-play-circle"></i>
+                <span>شروع رمان جدید</span>
+            </button>
+            <button class="menu-btn" onclick="continueGame()">
+                <i class="fas fa-history"></i>
+                <span>ادامه رمان</span>
+            </button>
+            <button class="menu-btn" onclick="showPage('table-of-contents')">
+                <i class="fas fa-book-open"></i>
+                <span>فهرست مطالب</span>
+            </button>
+            <button class="menu-btn" onclick="showPage('settings-page')">
+                <i class="fas fa-cog"></i>
+                <span>تنظیمات</span>
+            </button>
+            <button class="menu-btn" onclick="showPage('credits-page')">
+                <i class="fas fa-users"></i>
+                <span>سازندگان</span>
+            </button>
+            <button class="menu-btn" onclick="exitApp()">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>خروج</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- صفحه داستان -->
+    <div id="story-page" class="content-page">
+        <div class="page-header">
+            <h1>افسانه‌های جاودان شاهنامه</h1>
+            <p>رمان تعاملی بر اساس داستان‌های شاهنامه فردوسی</p>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="story-progress" style="width: 0%"></div>
+        </div>
+        
+        <div class="status-bar">
+            <div class="status-item">
+                <span class="status-label"><i class="fas fa-fist-raised"></i> شجاعت</span>
+                <span class="status-value" id="courage-value">50</span>
+                <div class="status-bar-container">
+                    <div class="status-bar-fill courage-bar" id="courage-bar" style="width: 50%"></div>
+                </div>
+            </div>
+            <div class="status-item">
+                <span class="status-label"><i class="fas fa-brain"></i> دانش</span>
+                <span class="status-value" id="wisdom-value">50</span>
+                <div class="status-bar-container">
+                    <div class="status-bar-fill wisdom-bar" id="wisdom-bar" style="width: 50%"></div>
+                </div>
+            </div>
+            <div class="status-item">
+                <span class="status-label"><i class="fas fa-handshake"></i> وفاداری</span>
+                <span class="status-value" id="loyalty-value">50</span>
+                <div class="status-bar-container">
+                    <div class="status-bar-fill loyalty-bar" id="loyalty-bar" style="width: 50%"></div>
+                </div>
+            </div>
+            <div class="status-item">
+                <span class="status-label"><i class="fas fa-dice"></i> تقدیر</span>
+                <span class="status-value" id="fate-value">50</span>
+                <div class="status-bar-container">
+                    <div class="status-bar-fill fate-bar" id="fate-bar" style="width: 50%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="story-container">
+            <div class="story-text" id="story-text">
+                <!-- محتوای داستان در اینجا قرار می‌گیرد -->
+            </div>
+            
+            <div class="choices-container" id="choices-container">
+                <!-- گزینه‌های انتخاب در اینجا قرار می‌گیرند -->
+            </div>
+        </div>
+        
+        <div class="page-footer">
+            <p>صفحه <span id="current-page">1</span> از <span id="total-pages">200</span></p>
+            <button class="menu-btn" onclick="showPage('main-menu')">بازگشت به منوی اصلی</button>
+        </div>
+    </div>
+
+    <!-- فهرست مطالب -->
+    <div id="table-of-contents" class="content-page">
+        <div class="page-header">
+            <h1>فهرست مطالب</h1>
+        </div>
+        
+        <div class="page-content">
+            <div class="menu-buttons">
+                <button class="menu-btn" onclick="showPage('preface-page')">
+                    <i class="fas fa-scroll"></i>
+                    <span>پیشگفتار</span>
+                </button>
+                <button class="menu-btn" onclick="showPage('introduction-page')">
+                    <i class="fas fa-info-circle"></i>
+                    <span>مقدمه</span>
+                </button>
+                <button class="menu-btn" onclick="showPage('characters-page')">
+                    <i class="fas fa-user-friends"></i>
+                    <span>معرفی شخصیت‌ها</span>
+                </button>
+                <button class="menu-btn" onclick="showPage('locations-page')">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <span>جهان داستان</span>
+                </button>
+                <button class="menu-btn" onclick="showPage('timeline-page')">
+                    <i class="fas fa-hourglass-half"></i>
+                    <span>گاه‌شمار رویدادها</span>
+                </button>
+                <button class="menu-btn" onclick="showPage('story-page')">
+                    <i class="fas fa-book"></i>
+                    <span>متن کامل رمان</span>
+                </button>
+                <button class="menu-btn" onclick="showPage('reviews-page')">
+                    <i class="fas fa-star"></i>
+                    <span>نقد و بررسی</span>
+                </button>
+                <button class="menu-btn" onclick="showPage('copyright-page')">
+                    <i class="fas fa-copyright"></i>
+                    <span>کپی رایت</span>
+                </button>
+                <button class="menu-btn" onclick="showPrintVersion()">
+                    <i class="fas fa-print"></i>
+                    <span>نسخه چاپی</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="page-footer">
+            <button class="menu-btn" onclick="showPage('main-menu')">بازگشت به منوی اصلی</button>
+        </div>
+    </div>
+
+    <!-- تنظیمات -->
+    <div id="settings-page" class="content-page">
+        <div class="page-header">
+            <h1>تنظیمات</h1>
+        </div>
+        
+        <div class="page-content">
+            <div class="settings-container">
+                <div class="setting-group">
+                    <label class="setting-label" for="theme-select">تم:</label>
+                    <select class="setting-select" id="theme-select" onchange="changeTheme(this.value)">
+                        <option value="default">پیش‌فرض (طلایی)</option>
+                        <option value="dark">تیره</option>
+                        <option value="blue">آبی</option>
+                        <option value="green">سبز</option>
+                        <option value="gold">طلایی</option>
+                        <option value="purple">بنفش</option>
+                        <option value="red">قرمز</option>
+                        <option value="silver">نقرهای</option>
+                    </select>
+                </div>
+                
+                <div class="setting-group">
+                    <label class="setting-label" for="font-select">فونت:</label>
+                    <select class="setting-select" id="font-select" onchange="changeFont(this.value)">
+                        <option value="Vazir">وزیر</option>
+                        <option value="Shabnam">شبنم</option>
+                        <option value="Parastoo">پرستو</option>
+                        <option value="Samim">سمیم</option>
+                        <option value="Nahid">ناهید</option>
+                        <option value="Sahel">ساحل</option>
+                        <option value="Gandom">گندم</option>
+                        <option value="Tanha">تنها</option>
+                    </select>
+                </div>
+                
+                <div class="setting-group">
+                    <label class="setting-label" for="font-size">اندازه فونت:</label>
+                    <input type="range" id="font-size" min="14" max="24" value="18" oninput="changeFontSize(this.value)">
+                    <span id="font-size-value">18px</span>
+                </div>
+                
+                <div class="setting-group">
+                    <label class="setting-label" for="line-height">فاصله خطوط:</label>
+                    <input type="range" id="line-height" min="1.4" max="2.2" step="0.1" value="1.8" oninput="changeLineHeight(this.value)">
+                    <span id="line-height-value">1.8</span>
+                </div>
+                
+                <div class="setting-group">
+                    <label class="setting-label">
+                        <input type="checkbox" id="auto-scroll" onchange="toggleAutoScroll(this.checked)">
+                        اسکرول خودکار
+                    </label>
+                </div>
+                
+                <div class="setting-group">
+                    <label class="setting-label">
+                        <input type="checkbox" id="background-music" onchange="toggleBackgroundMusic(this.checked)">
+                        موسیقی زمینه
+                    </label>
+                </div>
+                
+                <div class="setting-group">
+                    <label class="setting-label">
+                        <input type="checkbox" id="sound-effects" onchange="toggleSoundEffects(this.checked)">
+                        افکت‌های صوتی
+                    </label>
+                </div>
+                
+                <div class="setting-group">
+                    <label class="setting-label">
+                        <input type="checkbox" id="animations" onchange="toggleAnimations(this.checked)">
+                        انیمیشن‌ها
+                    </label>
+                </div>
+                
+                <div class="setting-group">
+                    <label class="setting-label">
+                        <input type="checkbox" id="save-choices" onchange="toggleSaveChoices(this.checked)" checked>
+                        ذخیره خودکار انتخاب‌ها
+                    </label>
+                </div>
+                
+                <div class="setting-group">
+                    <button class="menu-btn" onclick="resetProgress()">
+                        <i class="fas fa-redo"></i>
+                        <span>بازنشانی پیشرفت</span>
+                    </button>
+                </div>
+                
+                <div class="setting-group">
+                    <button class="menu-btn" onclick="exportSaveData()">
+                        <i class="fas fa-file-export"></i>
+                        <span>صدور اطلاعات ذخیره</span>
+                    </button>
+                    <button class="menu-btn" onclick="importSaveData()">
+                        <i class="fas fa-file-import"></i>
+                        <span>ورود اطلاعات ذخیره</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="page-footer">
+            <button class="menu-btn" onclick="showPage('main-menu')">بازگشت به منوی اصلی</button>
+        </div>
+    </div>
+
+    <!-- سازندگان -->
+    <div id="credits-page" class="content-page">
+        <div class="page-header">
+            <h1>سازندگان</h1>
+        </div>
+        
+        <div class="page-content">
+            <div class="credits-list">
+                <div class="character-profile">
+                    <h2>گردآورنده پروژه:</h2>
+                    <p><a href="https://www.instagram.com/hessamedien" target="_blank">حسام‌الدین</a></p>
+                    
+                    <h2>نویسندگان:</h2>
+                    <p>حسام‌الدین</p>
+                    <p>بر اساس شاهنامه فردوسی</p>
+                    
+                    <h2>کارگردان:</h2>
+                    <p>حسام‌الدین</p>
+                    
+                    <h2>طراحی و توسعه:</h2>
+                    <p>حسام‌الدین</p>
+                    
+                    <h2>مشاور تاریخی:</h2>
+                    <p>دکتر محمود امیدوار</p>
+                    <p>دکتر فاطمه جهانگیری</p>
+                    
+                    <h2>طراحی صدا و موسیقی:</h2>
+                    <p>رضا فرهنگ</p>
+                    <p>نوید آهنگ</p>
+                    
+                    <h2>طراحی گرافیک:</h2>
+                    <p>سارا هنرمند</p>
+                    <p>کامران تصویر</p>
+                    
+                    <h2>مشاور ادبی:</h2>
+                    <p>دکتر سعید قنبری</p>
+                    
+                    <h2>کپی رایت:</h2>
+                    <p>© 2023 افسانه‌های جاودان شاهنامه. تمامی حقوق محفوظ است.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="page-footer">
+            <button class="menu-btn" onclick="showPage('main-menu')">بازگشت به منوی اصلی</button>
+        </div>
+    </div>
+
+    <!-- پاپ‌آپ‌ها -->
+    <div id="popup-overlay" class="popup-overlay"></div>
+    
+    <div id="save-popup" class="popup">
+        <h2>ذخیره بازی</h2>
+        <p>آیا می‌خواهید پیشرفت بازی خود را ذخیره کنید؟</p>
+        <div class="popup-buttons">
+            <button class="menu-btn" onclick="saveGame()">بله، ذخیره کن</button>
+            <button class="menu-btn" onclick="closePopup('save-popup')">خیر</button>
+        </div>
+    </div>
+    
+    <div id="load-popup" class="popup">
+        <h2>بارگذاری بازی</h2>
+        <p>آیا می‌خواهید بازی ذخیره شده خود را بارگذاری کنید؟</p>
+        <div class="popup-buttons">
+            <button class="menu-btn" onclick="loadGame()">بله، بارگذاری کن</button>
+            <button class="menu-btn" onclick="closePopup('load-popup')">خیر</button>
+        </div>
+    </div>
+
+    <!-- دکمه شناور -->
+    <button class="floating-btn no-print" onclick="showPage('settings-page')">
+        <i class="fas fa-cog"></i>
+    </button>
+
+    <!-- صداها -->
+    <audio id="background-music" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="click-sound">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="success-sound">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="danger-sound">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-sword-cutting-flesh-2780.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="magic-sound">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-magic-sweep-2355.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // داده‌های داستان - بسیار گسترده‌تر و غنی‌تر با فقط دو گزینه در هر مرحله
+        const storyData = {
+            start: {
+                text: `
+                    <img class="character-image" src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=80" alt="کاخ شاهانه">
+                    <p class="narrative">ایرانویج، سرزمین اساطیری ایرانیان، در اوج شکوفایی و رفاه است. جمشید، پادشاه خردمند و توانا، صدها سال است که بر ایران حکومت می‌کند و هنرها و صنایع بسیاری به مردم آموخته است.</p>
+                    <p>تو <span class="highlight" id="player-name">[نام تو]</span>، از بزرگان دربار جمشید هستی. امروز در جشن بزرگ نوروز، در کاخ طلایی جمشید حاضر شده‌ای. تالار اصلی کاخ با فرش‌های گرانبها، دیوارهای مزین به طلا و نقره، و چلچراغ‌های درخشان تزئین شده است. صدای موسیقی و شادی مردم در سراسر کاخ طنین انداخته.</p>
+                    <p>جمشید بر تخت طلایی خود نشسته و با غرور به درباریان و مردم می‌نگرد. ناگهان سکوت بر تالار حکم‌فرما می‌شود. جمشید از جای برمی‌خیزد و با صدایی رسا اعلام می‌کند:</p>
+                    <p class="dialogue">"ای مردمان! بدانید که منم که این همه نعمت را آفریده‌ام! منم که جهان را از تاریکی به روشنایی کشانده‌ام! از این پس، مرا به عنوان خداوند جهان بپرستید، چرا که من خدای راستین شما هستم!"</p>
+                    <p>سکوت مرگباری سراسر تالار را فرا می‌گیرد. همه از این ادعای کفرآمیز شوکه شده‌اند. تو به عنوان یکی از بزرگان دربار، شاهد این صحنه هستی. چه می‌کنی؟</p>
+                `,
+                choices: [
+                    {
+                        text: "با شجاعت در برابر جمشید می‌ایستی و هشدار می‌دهی",
+                        next: "warning_immediate",
+                        effects: { courage: 10, loyalty: 5, wisdom: -5 }
+                    },
+                    {
+                        text: "سکوت می‌کنی و منتظر می‌مانی تا ببینی چه پیش می‌آید",
+                        next: "silence",
+                        effects: { courage: -10, wisdom: 5 }
+                    }
+                ]
+            },
+            
+            warning_immediate: {
+                text: `
+                    <img class="character-image" src="https://images.unsplash.com/photo-1589652717521-10c0d092dea9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="نفرین">
+                    <p>با شجاعت تمام از جای برمی‌خیزی و در میان سکوت سنگین تالار، خطاب به جمشید می‌گویی:</p>
+                    <p class="dialogue">"ای پادشاه جهان! فراموش نکن که این همه نعمت و قدرت از یزدان پاک است. غرور، راه به تباهی می‌برد و خشم اهورامزدا را برمی‌انگیزد. به یاد آور که تو نیز بشری و مانند دیگران خواهی مرد!"</p>
+                    <p>جمشید با چشمان خشمگین به تو می‌نگرد. صورتش از خشم سرخ شده و رگ‌های گردنش برآمده است.</p>
+                    <p class="dialogue">"جرأت داری در حضور همه مرا نصیحت کنی؟!"</p>
+                    <p>فریاد می‌زند و ادامه می‌دهد:</p>
+                    <p class="dialogue">"من خود آفریننده این نعمت‌ها هستم! تو و امثال تو فقط به خاطر بخشش من زنده‌اید! نگهبانان! این گستاخ را بگیرید!"</p>
+                    <p>نگهبانان مسلح به سوی تو می‌آیند. باید سریع تصمیم بگیری...</p>
+                `,
+                choices: [
+                    {
+                        text: "در موضع خود پافشاری می‌کنی و هشدار می‌دهی که این غرور به بهای تاج و تختش تمام خواهد شد",
+                        next: "stand_firm",
+                        effects: { courage: 15, loyalty: 10, wisdom: -10 }
+                    },
+                    {
+                        text: "عذرخواهی می‌کنی و می‌گویی فقط نگران پادشاه و کشور بوده‌ای",
+                        next: "apologize",
+                        effects: { courage: -10, wisdom: 5, loyalty: -5 }
+                    }
+                ]
+            },
+            
+            stand_firm: {
+                text: `
+                    <img class="character-image" src="https://images.unsplash.com/photo-1611651338412-8403fa8d6f8a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="جمشید خشمگین">
+                    <p>با وجود تهدید جمشید، همچنان محکم و استوار در جای خود ایستاده‌ای. چشمانت را به چشمان او می‌دوزی و با صدایی رسا می‌گویی:</p>
+                    <p class="dialogue">"ای پادشاه! یادت باشد که جمشیدی که ما می‌شناختیم، پادشاهی خردمند و فروتن بود. این جمشید مغرور و متکبر، برای ما بیگانه است!"</p>
+                    <p>جمشید از این جسارت تو به خشم می‌آید و فریاد می‌زند:</p>
+                    <p class="dialogue">"این آخرین هشدار است! اگر یک کلمه دیگر بگویی، سرت را از تن جدا خواهم کرد!"</p>
+                    <p>نگهبانان نزدیک شده‌اند و شمشیرهایشان را از نیام بیرون کشیده‌اند. چند تن از بزرگان دیگر دربار نیز به پشتیبانی تو برخاسته‌اند. وضعیت بسیار حساس شده است.</p>
+                `,
+                choices: [
+                    {
+                        text: "با شجاعت کامل در برابر جمشید می‌ایستی و می‌گویی که از مرگ نمی‌ترسی",
+                        next: "defy_jamshid",
+                        effects: { courage: 20, wisdom: -15, loyalty: 10 }
+                    },
+                    {
+                        text: "با احترام اما قاطعانه از تالار خارج می‌شوی",
+                        next: "dignified_exit",
+                        effects: { courage: 10, wisdom: 15, loyalty: 5 }
+                    }
+                ]
+            },
+            
+            defy_jamshid: {
+                text: `
+                    <img class="location-image" src="https://images.unsplash.com/photo-1545569341-9eb8b30979d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="زندان تاریک">
+                    <p class="narrative">جمشید از مقاومت تو به خشم می‌آید و دستور می‌دهد تو را به زندان بیندازند. تو را به سیاهچاله‌ای تاریک و نمور می‌برند که مملو از موش و حشرات موذی است.</p>
+                    <p>روزها و شب‌های بسیاری در این زندان تاریک می‌گذرانی. گاه صدای ناله دیگر زندانیان را می‌شنوی. غذایت نان خشک و آب گندیده است. اما روحیه تو شکسته نمی‌شود و به درستی راه خود ایمان داری.</p>
+                    <p>یک شب، نگهبانی که ظاهراً از رفتار جمشید ناراضی است، مخفیانه به تو نزدیک می‌شود و می‌گوید:</p>
+                    <p class="dialogue">"اخبار بدی از بیرون به گوش می‌رسد. ضحاک، شاهزاده عرب، با لشکری بزرگ به ایران حمله کرده است. جمشید از ترس فرار کرده و کسی از جای او خبر ندارد."</p>
+                    <p>این خبر تو را شوکه می‌کند. ایران در خطر است و تو در این زندان به سر می‌بری...</p>
+                `,
+                choices: [
+                    {
+                        text: "از نگهبان درخواست می‌کنی که تو را آزاد کند تا در دفاع از ایران شرکت کنی",
+                        next: "request_freedom",
+                        effects: { courage: 15, loyalty: 20, wisdom: 5 }
+                    },
+                    {
+                        text: "طرح فرار از زندان را می‌ریزی",
+                        next: "escape_plan",
+                        effects: { courage: 20, wisdom: 15, loyalty: -5 }
+                    }
+                ]
+            },
+            
+            request_freedom: {
+                text: `
+                    <img class="character-image" src="https://images.unsplash.com/photo-1589652717521-10c0d092dea9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="آزادی">
+                    <p>نگهبان پس از شنیدن درخواست تو، مدتی در سکوت به تو نگاه می‌کند. سپس آهی می‌کشد و می‌گوید:</p>
+                    <p class="dialogue">"من و چند تن از نگهبانان دیگر از ظلم جمشید به ستوه آمده‌ایم. ما تو را آزاد خواهیم کرد، اما باید به ما قول بدهی که برای نجات ایران بکوشی."</p>
+                    <p>تو با اشتیاق موافقت می‌کنی. آن شب، نگهبانان تو را از زندان آزاد می‌کنند و اسلحه و اسبی در اختیارت می‌گذارند.</p>
+                    <p>هوا تاریک و ماه کامل در آسمان می‌درخشد. باید تصمیم بگیری که به کجا بروی...</p>
+                `,
+                choices: [
+                    {
+                        text: "به سوی پایتخت می‌روی تا از وضعیت مطلع شوی",
+                        next: "to_capital",
+                        effects: { courage: 10, wisdom: 5, loyalty: 10 }
+                    },
+                    {
+                        text: "به دنبال دیگر نجیب‌زادگان وفادار به ایران می‌گردی",
+                        next: "find_nobles",
+                        effects: { wisdom: 15, loyalty: 10, courage: 5 }
+                    }
+                ]
+            },
+            
+            to_capital: {
+                text: `
+                    <img class="location-image" src="https://images.unsplash.com/photo-1542736667-069246bdbc6d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="پایتخت ویران">
+                    <p class="narrative">هنگامی که به پایتخت می‌رسی، صحنه‌ای هولناک در برابر چشمانت ظاهر می‌شود. شهر به آتش کشیده شده و اجساد در خیابان‌ها پراکنده است. لشکر ضحاک شهر را تصرف کرده و پرچم‌های سیاه او بر دیوارهای کاخ به اهتزاز درآمده است.</p>
+                    <p>مخفیانه به درون شهر نفوذ می‌کنی و به محله‌ای که پیشتر در آن زندگی می‌کردی می‌روی. خانه‌ات سوخته و غارت شده است. ناگهان صدای پایی از پشت سرت می‌شنوی...</p>
+                    <p>برمی‌گردی و مرد سالخورده‌ای را می‌بینی که در سایه دیوار پنهان شده است. او تو را می‌شناسد و با صدایی لرزان می‌گوید:</p>
+                    <p class="dialogue">"ای [نام تو]! تو زنده‌ای! همه گمان می‌کردند جمشید تو را کشته است."</p>
+                    <p>مرد تو را به خانه‌ای مخفی می‌برد و داستان را تعریف می‌کند:</p>
+                    <p class="dialogue">"ضحاک با نیروی شیطانی خود بر ایران مسلط شده است. او هر روز دو جوان ایرانی را می‌کشد و مغزشان را به مارهای روی شانه‌هایش می‌دهد. مردم در هراس به سر می‌برند."</p>
+                    <p>این داستان وحشتناک تو را به لرزه می‌اندازد. باید فکری به حال این مصیبت بکنی...</p>
+                `,
+                choices: [
+                    {
+                        text: "به دنبال کاوه آهنگر می‌گردی که شنیده‌ای علیه ضحاک قیام کرده است",
+                        next: "find_kaveh",
+                        effects: { courage: 15, loyalty: 20, wisdom: 10 }
+                    },
+                    {
+                        text: "به کوهستان می‌گریزی و به جمع هواداران فریدون می‌پیوندی",
+                        next: "join_fereydun",
+                        effects: { wisdom: 15, courage: 10, loyalty: 15 }
+                    }
+                ]
+            },
+            
+            find_kaveh: {
+                text: `
+                    <img class="character-image" src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2060&q=80" alt="کاوه آهنگر">
+                    <p class="narrative">پس از جستجوی فراوان، سرانجام کاوه آهنگر را در روستایی دورافتاده پیدا می‌کنی. او مردی قوی‌هیکل با چشمانی پر از آتش است که در آهنگری خود مشغول کار است.</p>
+                    <p>وقتی داستان خود را برایش تعریف می‌کنی، او با خشم می‌گوید:</p>
+                    <p class="dialogue">"ضحاک پسر مرا نیز کشت! من دیگر تحمل این بیداد را ندارم. فردا به بازار خواهم رفت و پیشبیم آهنین خود را به عنوان پرچم برمی‌افرازم. هر که دلش برای ایران می‌تپد، به من خواهد پیوست."</p>
+                    <p>تو با اشتیاق به او می‌پیوندی. فردا صبح، کاوه به بازار می‌رود و فریاد می‌زند:</p>
+                    <p class="dialogue">"ای مردم ایران! از خواب بیدار شوید! این اژدهای پلید باید از سرزمین ما بیرون رانده شود!"</p>
+                    <p>مردم که از ستم ضحاک به ستوه آمده‌اند، به تدریج به او می‌پیوندند. خیزش آغاز شده است...</p>
+                `,
+                choices: [
+                    {
+                        text: "در سازماندهی قیام به کاوه کمک می‌کنی",
+                        next: "organize_uprising",
+                        effects: { wisdom: 20, courage: 10, loyalty: 15 }
+                    },
+                    {
+                        text: "به عنوان نماینده به نزد فریدون می‌روی تا او را از قیام مطلع کنی",
+                        next: "contact_fereydun",
+                        effects: { wisdom: 15, courage: 15, loyalty: 20 }
+                    }
+                ]
+            },
+            
+            organize_uprising: {
+                text: `
+                    <img class="location-image" src="https://images.unsplash.com/photo-1545569341-9eb8b30979d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="قیام مردم">
+                    <p class="narrative">با کمک تو، قیام کاوه به سرعت گسترش می‌یابد. هزاران نفر از مردم عادی، پیشه‌وران، کشاورزان و حتی برخی از سربازان سابق ارتش جمشید به جنبش می‌پیوندند.</p>
+                    <p>تو مسئولیت آموزش نظامی به مردم را بر عهده می‌گیری. با استفاده از دانشی که از دوران خدمت در دربار جمشید کسب کرده‌ای، به آنان فنون رزم می‌آموزی.</p>
+                    <p>یک ماه پس از شروع قیام، خبر می‌رسد که فریدون، از نوادگان جمشید، از کوهستان فرود آمده و به جنبش پیوسته است. این خبر روحیه تازه‌ای به مبارزان می‌دهد.</p>
+                    <p>اکنون زمان آن فرا رسیده که به سوی پایتخت حرکت کنید و ضحاک را به چالش بکشید...</p>
+                `,
+                choices: [
+                    {
+                        text: "طرح محاصره تدریجی پایتخت را ارائه می‌دهی",
+                        next: "siege_plan",
+                        effects: { wisdom: 25, courage: 5, loyalty: 10 }
+                    },
+                    {
+                        text: "پیشنهاد می‌دهی که ابتدا شهرهای اطراف را آزاد کنید",
+                        next: "liberate_cities",
+                        effects: { wisdom: 15, courage: 10, loyalty: 15 }
+                    }
+                ]
+            },
+            
+            siege_plan: {
+                text: `
+                    <img class="location-image" src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2060&q=80" alt="محاصره">
+                    <p class="narrative">طرح تو برای محاصره تدریجی پایتخت مورد پذیرش فریدون و کاوه قرار می‌گیرد. لشکر آزادیبخش ایران به تدریج راه‌های منتهی به پایتخت را مسدود می‌کند و ارتباطات ضحاک با دنیای خارج قطع می‌شود.</p>
+                    <p>ماه‌ها می‌گذرد. در داخل پایتخت، قحطی و بیماری بیداد می‌کند. بسیاری از سربازان ضحاک که از رفتار او به ستوه آمده‌اند، مخفیانه به اردوی آزادیبخش می‌پیوندند.</p>
+                    <p>سرانجام، روز موعود فرا می‌رسد. فریدون تصمیم می‌گیرد که حمله نهایی را آغاز کند. او تو را به عنوان فرمانده یکی از سپاه‌ها منصوب می‌کند.</p>
+                    <p>نبرد نهایی برای آزادی ایران آغاز شده است...</p>
+                `,
+                choices: [
+                    {
+                        text: "مستقیماً به دروازه اصلی حمله می‌کنی",
+                        next: "main_gate_attack",
+                        effects: { courage: 25, wisdom: -5, loyalty: 10 }
+                    },
+                    {
+                        text: "از راه مخفی‌ای که می‌شناسی به درون شهر نفوذ می‌کنی",
+                        next: "secret_entry",
+                        effects: { wisdom: 20, courage: 15, loyalty: 10 }
+                    }
+                ]
+            },
+            
+            main_gate_attack: {
+                text: `
+                    <img class="location-image" src="https://images.unsplash.com/photo-1542736667-069246bdbc6d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="نبرد نهایی">
+                    <p class="narrative">نبرد دروازه اصلی یکی از خونین‌ترین نبردهای تاریخ ایران می‌شود. تو و سربازانت با شجاعت بی‌نظیری می‌جنگید. پس از ساعتها نبرد سخت، سرانجام دروازه شکسته می‌شود و لشکر آزادیبخش به درون شهر می‌ریزد.</p>
+                    <p>در حالی که تو مشغول نبرد با نگهبانان کاخ هستی، فریدون مستقیماً به اتاق تخت‌گاه حمله می‌برد. نبرد او با ضحاک افسانه‌ای می‌شود.</p>
+                    <p>سرانجام، فریدون با گرز گاوسر خود ضحاک را شکست می‌دهد. اما به جای کشتن او، ضحاک را در غاری در کوه دماوند به زنجیر می‌کشد تا تا ابد در عذاب باشد.</p>
+                    <p>ایران آزاد شده است! تو به عنوان قهرمان ملی شناخته می‌شوی و فریدون تو را به عنوان مشاور ارشد خود منصوب می‌کند.</p>
+                    <p class="highlight">این پایان پیروزمندانه سفر تو در جهان شاهنامه بود. اما داستان‌های دیگری هم هستند که منتظر کشف شدن توسط تو...</p>
+                `,
+                choices: [
+                    {
+                        text: "داستان را از ابتدا شروع کن",
+                        next: "start"
+                    },
+                    {
+                        text: "به منوی اصلی برگرد",
+                        next: "main_menu"
+                    }
+                ]
+            },
+            
+            // ادامه داستان از مسیرهای دیگر...
+            secret_entry: {
+                text: `
+                    <img class="location-image" src="https://images.unsplash.com/photo-1589652717521-10c0d092dea9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="پیروزی با تدبیر">
+                    <p class="narrative">با استفاده از دانشت از راه‌های مخفی شهر، تو و گروه کوچکی از جنگجویان برگزیده به درون کاخ نفوذ می‌کنید. شما مخفیانه به تالار تخت‌گاه می‌رسید، جایی که ضحاک در حالی که از نبرد بیرون بی‌خبر است، در حال خوشگذرانی است.</p>
+                    <p>با غافلگیری کامل، شما کنترل کاخ را به دست می‌گیرید و ضحاک را اسیر می‌کنید. وقتی خبر اسارت ضحاک به گوش سربازانش می‌رسد، مقاومت آنان در هم می‌شکند.</p>
+                    <p>فریدون وارد کاخ می‌شود و از هوشمندی و شجاعت تو تقدیر می‌کند. او می‌گوید:</p>
+                    <p class="dialogue">"تدبیر و خرد تو امروز جان صدها انسان را نجات داد. تو نمونه‌ای از بهترین‌های ایران هستی."</p>
+                    <p>تو به عنوان فرمانده کل قوای ایران منصوب می‌شوی و در دوران پادشاهی فریدون، نقش مهمی در بازسازی ایران ایفا می‌کنی.</p>
+                    <p class="highlight">این پایان خردمندانه سفر تو در جهان شاهنامه بود. اما داستان‌های دیگری هم هستند که منتظر کشف شدن توسط تو...</p>
+                `,
+                choices: [
+                    {
+                        text: "داستان را از ابتدا شروع کن",
+                        next: "start"
+                    },
+                    {
+                        text: "به منوی اصلی برگرد",
+                        next: "main_menu"
+                    }
+                ]
+            },
+            
+            // مسیر سکوت در ابتدا
+            silence: {
+                text: `
+                    <img class="character-image" src="https://images.unsplash.com/photo-1611651338412-8403fa8d6f8a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="جمشید مغرور">
+                    <p class="narrative">تو تصمیم می‌گیری سکوت کنی و منتظر بمانی. شاید جمشید از این ادعای کفرآمیز خود دست بردارد. اما روزها و هفته‌ها می‌گذرد و جمشید نه تنها از ادعای خود دست نمی‌کشد، بلکه روز به روز مغرورتر می‌شود.</p>
+                    <p>او دستور می‌دهد تندیس‌های بزرگی از خود در سراسر ایران برپا کنند و مردم را مجبور می‌کند که او را بپرستند. کسانی که مخالفت می‌کنند، به شدت مجازات می‌شوند.</p>
+                    <p>یک سال بعد، خبر می‌رسد که ضحاک، شاهزاده عرب، با لشکری بزرگ به مرزهای ایران حمله کرده است. جمشید که از فره ایزدی محروم شده، توانایی مقابله با او را ندارد و فرار می‌کند.</p>
+                    <p>ضحاک به سرعت بر ایران مسلط می‌شود و هزار سال حکومت ظالمانه خود را آغاز می‌کند. تو که شاهد این فاجعه هستی، اکنون پشیمان شده‌ای که در آن روز سرنوشت‌ساز سکوت کردی...</p>
+                `,
+                choices: [
+                    {
+                        text: "مخفیانه به مبارزه با ضحاک می‌پردازی",
+                        next: "resist_zahhak_secretly",
+                        effects: { courage: 15, wisdom: 10, loyalty: 5 }
+                    },
+                    {
+                        text: "به دربار ضحاک می‌روی و وانمود می‌کنی به او وفادار هستی",
+                        next: "infiltrate_zahhak_court",
+                        effects: { wisdom: 20, courage: -10, loyalty: -15 }
+                    }
+                ]
+            }
+        };
+
+        // متغیرهای وضعیت
+        let currentStoryId = 'start';
+        let storyHistory = [];
+        let playerStats = {
+            courage: 50,
+            wisdom: 50,
+            loyalty: 50,
+            fate: 50
+        };
+        let playerName = 'قهرمان ناشناس';
+        let gameProgress = 0;
+        let totalStoryNodes = Object.keys(storyData).length;
+        let autoScrollEnabled = false;
+        let backgroundMusicEnabled = false;
+        let soundEffectsEnabled = true;
+        let animationsEnabled = true;
+        let saveChoicesEnabled = true;
+
+        // نمایش صفحه
+        function showPage(pageId) {
+            // پنهان کردن همه صفحات
+            const pages = document.querySelectorAll('.content-page, #main-menu');
+            pages.forEach(page => {
+                page.style.display = 'none';
+            });
+            
+            // نمایش صفحه درخواستی
+            if (pageId === 'main_menu') {
+                document.getElementById('main-menu').style.display = 'flex';
+            } else {
+                document.getElementById(pageId).style.display = 'block';
+            }
+            
+            // اگر صفحه داستان است، محتوای آن را بارگذاری کن
+            if (pageId === 'story-page') {
+                loadStory(currentStoryId);
+            }
+            
+            // پخش صدای کلیک اگر فعال باشد
+            if (soundEffectsEnabled) {
+                playSound('click-sound');
+            }
+        }
+
+        // بارگذاری داستان
+        function loadStory(storyId) {
+            const story = storyData[storyId];
+            if (!story) return;
+            
+            // به‌روزرسانی تاریخچه
+            storyHistory.push(storyId);
+            
+            // به‌روزرسانی متن داستان
+            const storyTextElement = document.getElementById('story-text');
+            if (animationsEnabled) {
+                storyTextElement.classList.add('fade-in');
+            }
+            
+            // جایگزینی نام بازیکن در متن
+            let storyText = story.text;
+            storyText = storyText.replace(/\[نام تو\]/g, playerName);
+            
+            storyTextElement.innerHTML = storyText;
+            
+            // به‌روزرسانی گزینه‌ها
+            const choicesContainer = document.getElementById('choices-container');
+            choicesContainer.innerHTML = '';
+            
+            story.choices.forEach(choice => {
+                const button = document.createElement('button');
+                button.className = 'choice-btn';
+                if (animationsEnabled) {
+                    button.classList.add('slide-in-right');
+                }
+                button.textContent = choice.text;
+                button.onclick = () => {
+                    // اعمال اثرات انتخاب
+                    if (choice.effects) {
+                        applyEffects(choice.effects);
+                    }
+                    
+                    currentStoryId = choice.next;
+                    if (choice.next === 'main_menu') {
+                        showPage('main-menu');
+                    } else {
+                        loadStory(choice.next);
+                    }
+                    
+                    // پخش صدای کلیک اگر فعال باشد
+                    if (soundEffectsEnabled) {
+                        playSound('click-sound');
+                    }
+                    
+                    // ذخیره خودکار اگر فعال باشد
+                    if (saveChoicesEnabled) {
+                        autoSave();
+                    }
+                };
+                choicesContainer.appendChild(button);
+            });
+            
+            // به‌روزرسانی شماره صفحه
+            document.getElementById('current-page').textContent = storyHistory.length;
+            
+            // به‌روزرسانی پیشرفت داستان
+            updateProgress();
+            
+            // اسکرول خودکار اگر فعال باشد
+            if (autoScrollEnabled) {
+                window.scrollTo(0, 0);
+            }
+            
+            // حذف کلاس‌های انیمیشن پس از اجرا
+            setTimeout(() => {
+                storyTextElement.classList.remove('fade-in');
+                const choiceButtons = document.querySelectorAll('.choice-btn');
+                choiceButtons.forEach(btn => {
+                    btn.classList.remove('slide-in-right');
+                });
+            }, 1000);
+        }
+
+        // اعمال اثرات انتخاب
+        function applyEffects(effects) {
+            for (const stat in effects) {
+                if (playerStats.hasOwnProperty(stat)) {
+                    playerStats[stat] = Math.max(0, Math.min(100, playerStats[stat] + effects[stat]));
+                    updateStatusBar();
+                    
+                    // پخش صدا بر اساس نوع اثر
+                    if (soundEffectsEnabled) {
+                        if (effects[stat] > 0) {
+                            playSound('success-sound');
+                        } else if (effects[stat] < 0) {
+                            playSound('danger-sound');
+                        }
+                    }
+                }
+            }
+        }
+
+        // به‌روزرسانی نوار وضعیت
+        function updateStatusBar() {
+            document.getElementById('courage-value').textContent = playerStats.courage;
+            document.getElementById('wisdom-value').textContent = playerStats.wisdom;
+            document.getElementById('loyalty-value').textContent = playerStats.loyalty;
+            document.getElementById('fate-value').textContent = playerStats.fate;
+            
+            document.getElementById('courage-bar').style.width = playerStats.courage + '%';
+            document.getElementById('wisdom-bar').style.width = playerStats.wisdom + '%';
+            document.getElementById('loyalty-bar').style.width = playerStats.loyalty + '%';
+            document.getElementById('fate-bar').style.width = playerStats.fate + '%';
+        }
+
+        // به‌روزرسانی پیشرفت داستان
+        function updateProgress() {
+            const uniqueNodes = [...new Set(storyHistory)];
+            gameProgress = Math.min(100, Math.round((uniqueNodes.length / totalStoryNodes) * 100));
+            document.getElementById('story-progress').style.width = gameProgress + '%';
+        }
+
+        // تغییر تم
+        function changeTheme(theme) {
+            document.body.className = theme + '-theme';
+            localStorage.setItem('theme', theme);
+        }
+
+        // تغییر فونت
+        function changeFont(font) {
+            document.documentElement.style.setProperty('--font-family', font);
+            localStorage.setItem('font', font);
+        }
+
+        // تغییر اندازه فونت
+        function changeFontSize(size) {
+            document.documentElement.style.setProperty('--font-size', size + 'px');
+            document.getElementById('font-size-value').textContent = size + 'px';
+            localStorage.setItem('fontSize', size);
+        }
+
+        // تغییر فاصله خطوط
+        function changeLineHeight(height) {
+            document.documentElement.style.setProperty('--line-height', height);
+            document.getElementById('line-height-value').textContent = height;
+            localStorage.setItem('lineHeight', height);
+        }
+
+        // تغییر وضعیت اسکرول خودکار
+        function toggleAutoScroll(enabled) {
+            autoScrollEnabled = enabled;
+            localStorage.setItem('autoScroll', enabled);
+        }
+
+        // تغییر وضعیت موسیقی زمینه
+        function toggleBackgroundMusic(enabled) {
+            backgroundMusicEnabled = enabled;
+            const music = document.getElementById('background-music');
+            
+            if (enabled) {
+                music.play().catch(e => console.log('Autoplay prevented:', e));
+            } else {
+                music.pause();
+            }
+            
+            localStorage.setItem('backgroundMusic', enabled);
+        }
+
+        // تغییر وضعیت افکت‌های صوتی
+        function toggleSoundEffects(enabled) {
+            soundEffectsEnabled = enabled;
+            localStorage.setItem('soundEffects', enabled);
+        }
+
+        // تغییر وضعیت انیمیشن‌ها
+        function toggleAnimations(enabled) {
+            animationsEnabled = enabled;
+            localStorage.setItem('animations', enabled);
+        }
+
+        // تغییر وضعیت ذخیره خودکار
+        function toggleSaveChoices(enabled) {
+            saveChoicesEnabled = enabled;
+            localStorage.setItem('saveChoices', enabled);
+        }
+
+        // پخش صدا
+        function playSound(soundId) {
+            const sound = document.getElementById(soundId);
+            sound.currentTime = 0;
+            sound.play().catch(e => console.log('Sound play prevented:', e));
+        }
+
+        // نمایش پاپ‌آپ
+        function showPopup(popupId) {
+            document.getElementById('popup-overlay').style.display = 'block';
+            document.getElementById(popupId).style.display = 'block';
+        }
+
+        // بستن پاپ‌آپ
+        function closePopup(popupId) {
+            document.getElementById('popup-overlay').style.display = 'none';
+            document.getElementById(popupId).style.display = 'none';
+        }
+
+        // شروع بازی جدید
+        function startNewGame() {
+            const name = prompt('لطفاً نام شخصیت خود را وارد کنید:', 'قهرمان ناشناس');
+            if (name) {
+                playerName = name;
+                currentStoryId = 'start';
+                storyHistory = [];
+                playerStats = {
+                    courage: 50,
+                    wisdom: 50,
+                    loyalty: 50,
+                    fate: 50
+                };
+                updateStatusBar();
+                showPage('story-page');
+            }
+        }
+
+        // ادامه بازی
+        function continueGame() {
+            const savedGame = localStorage.getItem('shahnamehNovelSave');
+            if (savedGame) {
+                const gameData = JSON.parse(savedGame);
+                currentStoryId = gameData.currentStoryId;
+                storyHistory = gameData.storyHistory;
+                playerStats = gameData.playerStats;
+                playerName = gameData.playerName;
+                updateStatusBar();
+                showPage('story-page');
+            } else {
+                alert('هیچ بازی ذخیره شده‌ای پیدا نشد. لطفاً یک بازی جدید شروع کنید.');
+            }
+        }
+
+        // ذخیره خودکار
+        function autoSave() {
+            if (saveChoicesEnabled) {
+                saveGame();
+            }
+        }
+
+        // ذخیره بازی
+        function saveGame() {
+            const gameData = {
+                currentStoryId: currentStoryId,
+                storyHistory: storyHistory,
+                playerStats: playerStats,
+                playerName: playerName,
+                timestamp: new Date().toISOString()
+            };
+            
+            localStorage.setItem('shahnamehNovelSave', JSON.stringify(gameData));
+            closePopup('save-popup');
+            alert('بازی با موفقیت ذخیره شد.');
+        }
+
+        // بارگذاری بازی
+        function loadGame() {
+            continueGame();
+            closePopup('load-popup');
+        }
+
+        // بازنشانی پیشرفت
+        function resetProgress() {
+            if (confirm('آیا مطمئن هستید که می‌خواهید تمام پیشرفت خود را بازنشانی کنید؟ این عمل غیرقابل بازگشت است.')) {
+                localStorage.removeItem('shahnamehNovelSave');
+                currentStoryId = 'start';
+                storyHistory = [];
+                playerStats = {
+                    courage: 50,
+                    wisdom: 50,
+                    loyalty: 50,
+                    fate: 50
+                };
+                updateStatusBar();
+                alert('پیشرفت بازی بازنشانی شد.');
+            }
+        }
+
+        // صدور اطلاعات ذخیره
+        function exportSaveData() {
+            const savedGame = localStorage.getItem('shahnamehNovelSave');
+            if (savedGame) {
+                const blob = new Blob([savedGame], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'shahnameh_novel_save.json';
+                a.click();
+                URL.revokeObjectURL(url);
+            } else {
+                alert('هیچ اطلاعات ذخیره‌ای برای صدور وجود ندارد.');
+            }
+        }
+
+        // ورود اطلاعات ذخیره
+        function importSaveData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = e => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = event => {
+                    try {
+                        const gameData = JSON.parse(event.target.result);
+                        localStorage.setItem('shahnamehNovelSave', JSON.stringify(gameData));
+                        alert('اطلاعات ذخیره با موفقیت وارد شد.');
+                    } catch (error) {
+                        alert('خطا در وارد کردن اطلاعات ذخیره. لطفاً مطمئن شوید که فایل معتبر است.');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        // نمایش نسخه چاپی
+        function showPrintVersion() {
+            alert('نسخه چاپی در حال توسعه است.');
+        }
+
+        // خروج از برنامه
+        function exitApp() {
+            if (confirm('آیا مطمئن هستید که می‌خواهید از برنامه خارج شوید؟')) {
+                // ذخیره بازی قبل از خروج
+                if (saveChoicesEnabled) {
+                    saveGame();
+                }
+                
+                window.close();
+                
+                // در مرورگرهای وب، این کار ممکن است مؤثر نباشد
+                if (!window.closed) {
+                    alert('برای خروج، پنجره مرورگر را ببندید.');
+                }
+            }
+        }
+
+        // بارگذاری تنظیمات ذخیره شده
+        function loadSettings() {
+            // تم
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.getElementById('theme-select').value = savedTheme;
+                changeTheme(savedTheme);
+            }
+            
+            // فونت
+            const savedFont = localStorage.getItem('font');
+            if (savedFont) {
+                document.getElementById('font-select').value = savedFont;
+                changeFont(savedFont);
+            }
+            
+            // اندازه فونت
+            const savedFontSize = localStorage.getItem('fontSize');
+            if (savedFontSize) {
+                document.getElementById('font-size').value = savedFontSize;
+                changeFontSize(savedFontSize);
+            }
+            
+            // فاصله خطوط
+            const savedLineHeight = localStorage.getItem('lineHeight');
+            if (savedLineHeight) {
+                document.getElementById('line-height').value = savedLineHeight;
+                changeLineHeight(savedLineHeight);
+            }
+            
+            // اسکرول خودکار
+            const savedAutoScroll = localStorage.getItem('autoScroll');
+            if (savedAutoScroll) {
+                document.getElementById('auto-scroll').checked = savedAutoScroll === 'true';
+                autoScrollEnabled = savedAutoScroll === 'true';
+            }
+            
+            // موسیقی زمینه
+            const savedBackgroundMusic = localStorage.getItem('backgroundMusic');
+            if (savedBackgroundMusic) {
+                document.getElementById('background-music').checked = savedBackgroundMusic === 'true';
+                backgroundMusicEnabled = savedBackgroundMusic === 'true';
+                if (backgroundMusicEnabled) {
+                    toggleBackgroundMusic(true);
+                }
+            }
+            
+            // افکت‌های صوتی
+            const savedSoundEffects = localStorage.getItem('soundEffects');
+            if (savedSoundEffects) {
+                document.getElementById('sound-effects').checked = savedSoundEffects === 'true';
+                soundEffectsEnabled = savedSoundEffects === 'true';
+            }
+            
+            // انیمیشن‌ها
+            const savedAnimations = localStorage.getItem('animations');
+            if (savedAnimations) {
+                document.getElementById('animations').checked = savedAnimations === 'true';
+                animationsEnabled = savedAnimations === 'true';
+            }
+            
+            // ذخیره خودکار
+            const savedSaveChoices = localStorage.getItem('saveChoices');
+            if (savedSaveChoices) {
+                document.getElementById('save-choices').checked = savedSaveChoices === 'true';
+                saveChoicesEnabled = savedSaveChoices === 'true';
+            }
+        }
+
+        // شروع برنامه
+        window.onload = function() {
+            // بارگذاری تنظیمات
+            loadSettings();
+            
+            // نمایش صفحه آغازین برای ۴ ثانیه
+            setTimeout(() => {
+                document.getElementById('splash-screen').style.display = 'none';
+                document.getElementById('main-menu').style.display = 'flex';
+            }, 4000);
+        };
+    </script>
+</body>
+</html>

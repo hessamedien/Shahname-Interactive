@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>افسانه‌های شاهنامه - بازی 8 بیتی</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #000;
+            color: #fff;
+            image-rendering: pixelated;
+            overflow-x: hidden;
+            cursor: default;
+        }
+        
+        /* 8-bit color palette */
+        :root {
+            --bg-dark: #000;
+            --bg-darker: #0a0a2a;
+            --text-light: #ffffff;
+            --text-dark: #000000;
+            --primary: #ff0000;
+            --secondary: #0000ff;
+            --accent: #00ff00;
+            --highlight: #ffff00;
+            --ui-bg: #3a3a7a;
+            --ui-border: #5555aa;
+            --ui-dark: #1a1a5a;
+            --ui-light: #7a7aff;
+            --health: #ff3355;
+            --mana: #3355ff;
+            --energy: #33ff55;
+            --fate: #ff33ff;
+        }
+        
+        /* Pixel font styling */
+        @font-face {
+            font-family: 'PixelFont';
+            src: url('https://fonts.cdnfonts.com/css/press-start-2p');
+        }
+        
+        .pixel-text {
+            font-family: 'PixelFont', 'Courier New', monospace;
+            font-size: 16px;
+            line-height: 1.4;
+            text-shadow: 2px 2px 0 #000;
+        }
+        
+        .pixel-text-small {
+            font-family: 'PixelFont', 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            text-shadow: 2px 2px 0 #000;
+        }
+        
+        .pixel-text-large {
+            font-family: 'PixelFont', 'Courier New', monospace;
+            font-size: 20px;
+            line-height: 1.4;
+            text-shadow: 2px 2px 0 #000;
+        }
+        
+        /* Screens */
+        .screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--bg-darker);
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(58, 58, 122, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 0, 0, 0.2) 0%, transparent 50%);
+            z-index: 10;
+            padding: 20px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        /* Splash screen */
+        #splash-screen {
+            background-color: var(--bg-dark);
+            background-image: 
+                linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(58, 58, 122, 0.1) 2px, rgba(58, 58, 122, 0.1) 4px);
+        }
+        
+        .title {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: var(--primary);
+            text-align: center;
+            text-shadow: 3px 3px 0 #000, 0 0 10px rgba(255, 0, 0, 0.5);
+            animation: blink 2s infinite;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            margin-bottom: 30px;
+            color: var(--highlight);
+            text-align: center;
+        }
+        
+        .loading-container {
+            width: 300px;
+            height: 20px;
+            border: 3px solid var(--ui-border);
+            background-color: var(--ui-dark);
+            margin-top: 30px;
+            position: relative;
+        }
+        
+        .loading-bar {
+            height: 100%;
+            width: 0%;
+            background-color: var(--primary);
+            transition: width 0.3s;
+        }
+        
+        /* Main menu */
+        #main-menu {
+            background-color: var(--bg-darker);
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(58, 58, 122, 0.1) 2px, rgba(58, 58, 122, 0.1) 4px);
+        }
+        
+        .menu-container {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .menu-title {
+            font-size: 24px;
+            margin-bottom: 30px;
+            color: var(--highlight);
+            text-align: center;
+            text-shadow: 2px 2px 0 #000;
+        }
+        
+        .menu-items {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .menu-item {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--ui-bg);
+            border: 3px solid var(--ui-border);
+            color: var(--text-light);
+            font-family: 'PixelFont', 'Courier New', monospace;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .menu-item:hover, .menu-item:focus {
+            background-color: var(--ui-light);
+            color: var(--text-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 0 var(--ui-border);
+        }
+        
+        .menu-item:active {
+            transform: translateY(1px);
+            box-shadow: 0 1px 0 var(--ui-border);
+        }
+        
+        /* Game screen */
+        #game-screen {
+            background-color: var(--bg-dark);
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(58, 58, 122, 0.1) 2px, rgba(58, 58, 122, 0.1) 4px);
+            justify-content: flex-start;
+            padding-top: 20px;
+        }
+        
+        .game-container {
+            width: 100%;
+            max-width: 800px;
+            height: 90%;
+            display: flex;
+            flex-direction: column;
+            border: 4px solid var(--ui-border);
+            background-color: var(--ui-dark);
+            position: relative;
+        }
+        
+        .game-header {
+            padding: 10px;
+            background-color: var(--ui-bg);
+            border-bottom: 4px solid var(--ui-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .player-name {
+            color: var(--highlight);
+            font-size: 18px;
+        }
+        
+        .game-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .story-text {
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: var(--text-light);
+        }
+        
+        .choices-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .choice-btn {
+            padding: 12px;
+            background-color: var(--ui-bg);
+            border: 3px solid var(--ui-border);
+            color: var(--text-light);
+            font-family: 'PixelFont', 'Courier New', monospace;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: right;
+            transition: all 0.2s;
+        }
+        
+        .choice-btn:hover, .choice-btn:focus {
+            background-color: var(--ui-light);
+            color: var(--text-dark);
+            transform: translateX(-5px);
+        }
+        
+        /* Status bars */
+        .status-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .status-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-label {
+            width: 80px;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        .status-meter {
+            width: 120px;
+            height: 16px;
+            border: 2px solid var(--ui-border);
+            background-color: var(--ui-dark);
+            position: relative;
+        }
+        
+        .status-fill {
+            height: 100%;
+            position: absolute;
+            top: 0;
+            right: 0;
+            transition: width 0.5s;
+        }
+        
+        .courage-fill {
+            background-color: var(--health);
+        }
+        
+        .wisdom-fill {
+            background-color: var(--mana);
+        }
+        
+        .loyalty-fill {
+            background-color: var(--energy);
+        }
+        
+        .fate-fill {
+            background-color: var(--fate);
+        }
+        
+        .status-value {
+            width: 30px;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        /* Character and location images */
+        .pixel-art {
+            image-rendering: pixelated;
+            border: 3px solid var(--ui-border);
+            margin: 10px 0;
+        }
+        
+        .character-image {
+            width: 120px;
+            height: 120px;
+            float: left;
+            margin: 0 15px 10px 0;
+            background-color: var(--ui-bg);
+        }
+        
+        .location-image {
+            width: 100%;
+            height: 150px;
+            background-color: var(--ui-bg);
+        }
+        
+        /* Progress bar */
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            border: 2px solid var(--ui-border);
+            background-color: var(--ui-dark);
+            margin: 10px 0;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: var(--accent);
+            transition: width 0.5s;
+        }
+        
+        /* Game controls */
+        .game-controls {
+            padding: 10px;
+            background-color: var(--ui-bg);
+            border-top: 4px solid var(--ui-border);
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .control-btn {
+            padding: 8px 15px;
+            background-color: var(--ui-dark);
+            border: 2px solid var(--ui-border);
+            color: var(--text-light);
+            font-family: 'PixelFont', 'Courier New', monospace;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .control-btn:hover {
+            background-color: var(--ui-light);
+            color: var(--text-dark);
+        }
+        
+        /* Pixel art animations */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        @keyframes pixelate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pixel-animation {
+            animation: pixelate 0.3s ease-in-out;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .pixel-text {
+                font-size: 14px;
+            }
+            
+            .pixel-text-small {
+                font-size: 10px;
+            }
+            
+            .pixel-text-large {
+                font-size: 18px;
+            }
+            
+            .title {
+                font-size: 20px;
+            }
+            
+            .menu-title {
+                font-size: 18px;
+            }
+            
+            .menu-item {
+                font-size: 14px;
+                padding: 12px;
+            }
+            
+            .game-container {
+                height: 95%;
+            }
+            
+            .status-container {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .status-bar {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div id="splash-screen" class="screen">
+        <h1 class="title pixel-text-large">افسانه‌های شاهنامه</h1>
+        <p class="subtitle pixel-text">بازی 8 بیتی</p>
+        <div class="loading-container">
+            <div class="loading-bar" id="loading-bar"></div>
+        </div>
+        <p class="pixel-text-small" style="margin-top: 20px;">در حال بارگذاری...</p>
+    </div>
+
+    <!-- Main Menu -->
+    <div id="main-menu" class="screen hidden">
+        <div class="menu-container">
+            <h2 class="menu-title pixel-text-large">افسانه‌های شاهنامه</h2>
+            <div class="menu-items">
+                <button class="menu-item pixel-text" onclick="startNewGame()">شروع بازی جدید</button>
+                <button class="menu-item pixel-text" onclick="continueGame()">ادامه بازی</button>
+                <button class="menu-item pixel-text" onclick="showSettings()">تنظیمات</button>
+                <button class="menu-item pixel-text" onclick="showCredits()">سازندگان</button>
+                <button class="menu-item pixel-text" onclick="exitGame()">خروج</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen hidden">
+        <div class="game-container">
+            <div class="game-header">
+                <div class="player-name pixel-text" id="player-name-display">قهرمان ناشناس</div>
+                <div class="pixel-text-small">صفحه <span id="current-page">1</span></div>
+            </div>
+            
+            <div class="game-content" id="game-content">
+                <!-- Game content will be loaded here -->
+            </div>
+            
+            <div class="game-controls">
+                <button class="control-btn pixel-text-small" onclick="saveGame()">ذخیره</button>
+                <button class="control-btn pixel-text-small" onclick="showMainMenu()">منوی اصلی</button>
+                <button class="control-btn pixel-text-small" onclick="toggleSound()">صدا: روشن</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game data - simplified for 8-bit style
+        const storyData = {
+            start: {
+                text: `در سرزمین افسانه‌ای ایران، جمشید پادشاهی می‌کند. امروز روز نوروز است و او در دربارش ادعای خدایی می‌کند. تو به عنوان یکی از بزرگان دربار شاهد این صحنه هستی.`,
+                image: 'character',
+                choices: [
+                    { text: "با شجاعت در برابر جمشید بایست", next: "warning", effects: { courage: 10, wisdom: -5 } },
+                    { text: "سکوت کن و منتظر بمان", next: "silence", effects: { courage: -10, wisdom: 5 } },
+                    { text: "با دیگر بزرگان مشورت کن", next: "consult", effects: { wisdom: 10, courage: -5 } }
+                ]
+            },
+            warning: {
+                text: `جمشید از مقاومت تو به خشم می‌آید و دستور می‌دهد تو را به زندان بیندازند. در سیاهچاله‌ای تاریک و نمور زندانی شده‌ای.`,
+                image: 'location',
+                choices: [
+                    { text: "طرح فرار از زندان بزن", next: "escape", effects: { courage: 15, wisdom: 10 } },
+                    { text: "از نگهبان درخواست آزادی کن", next: "request", effects: { wisdom: 5, loyalty: 10 } },
+                    { text: "در زندان منتظر نشانه‌ای از اهورامزدا باش", next: "wait", effects: { wisdom: 10, courage: -5 } }
+                ]
+            },
+            silence: {
+                text: `تو سکوت کردی و جمشید روز به روز مغرورتر شد. ضحاک به ایران حمله کرده و جمشید فرار کرده است. اکنون ایران در دست ضحاک است.`,
+                image: 'location',
+                choices: [
+                    { text: "مخفیانه به مبارزه با ضحاک بپرداز", next: "resist", effects: { courage: 15, loyalty: 10 } },
+                    { text: "به دربار ضحاک برو و وانمود کن وفاداری", next: "infiltrate", effects: { wisdom: 20, loyalty: -15 } },
+                    { text: "به کوهستان بگریز و به فریدون بپیوند", next: "fereydun", effects: { courage: 10, loyalty: 20 } }
+                ]
+            },
+            escape: {
+                text: `با کمک نگهبانان ناراضی، از زندان فرار کردی. اکنون آزاد هستی و باید برای نجات ایران اقدام کنی.`,
+                image: 'character',
+                choices: [
+                    { text: "به دنبال کاوه آهنگر برو", next: "kaveh", effects: { courage: 10, loyalty: 15 } },
+                    { text: "به کوهستان برو و فریدون را پیدا کن", next: "fereydun", effects: { wisdom: 15, loyalty: 20 } },
+                    { text: "به پایتخت برگرد و از وضعیت مطلع شو", next: "capital", effects: { courage: 5, wisdom: 10 } }
+                ]
+            },
+            kaveh: {
+                text: `کاوه آهنگر را پیدا کردی که علیه ضحاک قیام کرده است. او پیشبند چرمی خود را به عنوان پرچم برافراشته است.`,
+                image: 'character',
+                choices: [
+                    { text: "به کاوه بپیوند و در قیام شرکت کن", next: "join_kaveh", effects: { courage: 20, loyalty: 15 } },
+                    { text: "به کاوه پیشنهاد بده با فریدون متحد شود", next: "unite", effects: { wisdom: 20, loyalty: 10 } },
+                    { text: "مخفیانه به دربار ضحاک نفوذ کن", next: "infiltrate", effects: { wisdom: 15, courage: -5 } }
+                ]
+            },
+            join_kaveh: {
+                text: `به کاوه پیوستی و مردم زیادی به شما ملحق شدند. پرچم کاوه نماد مقاومت در برابر ظلم ضحاک شده است.`,
+                image: 'location',
+                choices: [
+                    { text: "به سمت دربار ضحاک حرکت کنید", next: "march", effects: { courage: 25, loyalty: 20 } },
+                    { text: "به دنبال فریدون بگردید تا با او متحد شوید", next: "find_fereydun", effects: { wisdom: 15, loyalty: 25 } },
+                    { text: "شهرها را یکی پس از دیگری آزاد کنید", next: "liberate", effects: { courage: 20, wisdom: 10 } }
+                ]
+            }
+        };
+
+        // Game state
+        let currentStoryId = 'start';
+        let playerStats = {
+            courage: 50,
+            wisdom: 50,
+            loyalty: 50,
+            fate: 50
+        };
+        let playerName = 'قهرمان ناشناس';
+        let gameProgress = 0;
+        let soundEnabled = true;
+        let storyHistory = [];
+
+        // DOM elements
+        const splashScreen = document.getElementById('splash-screen');
+        const mainMenu = document.getElementById('main-menu');
+        const gameScreen = document.getElementById('game-screen');
+        const gameContent = document.getElementById('game-content');
+        const playerNameDisplay = document.getElementById('player-name-display');
+        const currentPageDisplay = document.getElementById('current-page');
+        const loadingBar = document.getElementById('loading-bar');
+
+        // Initialize game
+        function initGame() {
+            // Simulate loading
+            let progress = 0;
+            const loadingInterval = setInterval(() => {
+                progress += 2;
+                loadingBar.style.width = `${progress}%`;
+                
+                if (progress >= 100) {
+                    clearInterval(loadingInterval);
+                    setTimeout(() => {
+                        splashScreen.classList.add('hidden');
+                        mainMenu.classList.remove('hidden');
+                    }, 500);
+                }
+            }, 50);
+            
+            // Load saved game if exists
+            const savedGame = localStorage.getItem('shahnameh8bit');
+            if (savedGame) {
+                try {
+                    const gameData = JSON.parse(savedGame);
+                    playerName = gameData.playerName || playerName;
+                    playerStats = gameData.playerStats || playerStats;
+                    currentStoryId = gameData.currentStoryId || currentStoryId;
+                    storyHistory = gameData.storyHistory || storyHistory;
+                    gameProgress = gameData.gameProgress || gameProgress;
+                } catch (e) {
+                    console.error('Error loading saved game:', e);
+                }
+            }
+        }
+
+        // Start new game
+        function startNewGame() {
+            // In a real game, you would ask for player name
+            playerName = prompt('نام قهرمان خود را وارد کنید:', 'رستم') || 'قهرمان ناشناس';
+            playerStats = { courage: 50, wisdom: 50, loyalty: 50, fate: 50 };
+            currentStoryId = 'start';
+            storyHistory = ['start'];
+            gameProgress = 0;
+            
+            playerNameDisplay.textContent = playerName;
+            mainMenu.classList.add('hidden');
+            gameScreen.classList.remove('hidden');
+            
+            loadStory(currentStoryId);
+        }
+
+        // Continue game
+        function continueGame() {
+            const savedGame = localStorage.getItem('shahnameh8bit');
+            if (savedGame) {
+                try {
+                    const gameData = JSON.parse(savedGame);
+                    playerName = gameData.playerName;
+                    playerStats = gameData.playerStats;
+                    currentStoryId = gameData.currentStoryId;
+                    storyHistory = gameData.storyHistory;
+                    gameProgress = gameData.gameProgress;
+                    
+                    playerNameDisplay.textContent = playerName;
+                    mainMenu.classList.add('hidden');
+                    gameScreen.classList.remove('hidden');
+                    
+                    loadStory(currentStoryId);
+                } catch (e) {
+                    alert('خطا در بارگذاری بازی ذخیره شده!');
+                }
+            } else {
+                alert('هیچ بازی ذخیره شده‌ای یافت نشد!');
+            }
+        }
+
+        // Load story
+        function loadStory(storyId) {
+            const story = storyData[storyId];
+            if (!story) return;
+            
+            // Add to history if not already there
+            if (!storyHistory.includes(storyId)) {
+                storyHistory.push(storyId);
+            }
+            
+            // Update progress
+            gameProgress = Math.min(100, Math.round((storyHistory.length / Object.keys(storyData).length) * 100));
+            currentPageDisplay.textContent = storyHistory.length;
+            
+            // Create story content
+            gameContent.innerHTML = '';
+            
+            // Add status bars
+            const statusContainer = document.createElement('div');
+            statusContainer.className = 'status-container';
+            
+            const courageBar = createStatusBar('شجاعت', playerStats.courage, 'courage-fill');
+            const wisdomBar = createStatusBar('دانش', playerStats.wisdom, 'wisdom-fill');
+            const loyaltyBar = createStatusBar('وفاداری', playerStats.loyalty, 'loyalty-fill');
+            const fateBar = createStatusBar('تقدیر', playerStats.fate, 'fate-fill');
+            
+            statusContainer.appendChild(courageBar);
+            statusContainer.appendChild(wisdomBar);
+            statusContainer.appendChild(loyaltyBar);
+            statusContainer.appendChild(fateBar);
+            
+            gameContent.appendChild(statusContainer);
+            
+            // Add progress bar
+            const progressContainer = document.createElement('div');
+            progressContainer.className = 'progress-container';
+            const progressBar = document.createElement('div');
+            progressBar.className = 'progress-bar';
+            progressBar.style.width = `${gameProgress}%`;
+            progressContainer.appendChild(progressBar);
+            gameContent.appendChild(progressContainer);
+            
+            // Add story image
+            if (story.image === 'character') {
+                const characterImg = document.createElement('div');
+                characterImg.className = 'character-image pixel-art';
+                characterImg.innerHTML = `
+                    <div style="width:100%;height:100%;background:linear-gradient(135deg, #3a3a7a, #1a1a5a);display:flex;align-items:center;justify-content:center;">
+                        <div style="width:80%;height:80%;background:#5555aa;border:2px solid #7a7aff;"></div>
+                    </div>
+                `;
+                gameContent.appendChild(characterImg);
+            } else if (story.image === 'location') {
+                const locationImg = document.createElement('div');
+                locationImg.className = 'location-image pixel-art';
+                locationImg.innerHTML = `
+                    <div style="width:100%;height:100%;background:linear-gradient(135deg, #1a1a5a, #0a0a2a);display:flex;align-items:center;justify-content:center;">
+                        <div style="width:90%;height:40%;background:#3a3a7a;border:2px solid #5555aa;position:relative;">
+                            <div style="position:absolute;top:10px;left:10px;width:20px;height:20px;background:#ff0000;"></div>
+                            <div style="position:absolute;bottom:10px;right:10px;width:30px;height:30px;background:#0000ff;"></div>
+                        </div>
+                    </div>
+                `;
+                gameContent.appendChild(locationImg);
+            }
+            
+            // Add story text
+            const storyText = document.createElement('div');
+            storyText.className = 'story-text pixel-text';
+            storyText.textContent = story.text;
+            gameContent.appendChild(storyText);
+            
+            // Add choices
+            const choicesContainer = document.createElement('div');
+            choicesContainer.className = 'choices-container';
+            
+            story.choices.forEach(choice => {
+                const choiceBtn = document.createElement('button');
+                choiceBtn.className = 'choice-btn pixel-text';
+                choiceBtn.textContent = choice.text;
+                choiceBtn.onclick = () => {
+                    // Apply effects
+                    if (choice.effects) {
+                        for (const stat in choice.effects) {
+                            playerStats[stat] = Math.max(0, Math.min(100, playerStats[stat] + choice.effects[stat]));
+                        }
+                        updateStatusBars();
+                    }
+                    
+                    // Play sound if enabled
+                    if (soundEnabled) {
+                        playSound('click');
+                    }
+                    
+                    // Move to next story
+                    currentStoryId = choice.next;
+                    loadStory(choice.next);
+                    
+                    // Auto-save
+                    saveGame();
+                };
+                choicesContainer.appendChild(choiceBtn);
+            });
+            
+            gameContent.appendChild(choicesContainer);
+            
+            // Scroll to top
+            gameContent.scrollTop = 0;
+        }
+
+        // Create status bar
+        function createStatusBar(label, value, fillClass) {
+            const statusBar = document.createElement('div');
+            statusBar.className = 'status-bar';
+            
+            const statusLabel = document.createElement('div');
+            statusLabel.className = 'status-label pixel-text-small';
+            statusLabel.textContent = label;
+            
+            const statusMeter = document.createElement('div');
+            statusMeter.className = 'status-meter';
+            
+            const statusFill = document.createElement('div');
+            statusFill.className = `status-fill ${fillClass}`;
+            statusFill.style.width = `${value}%`;
+            statusFill.id = `${label.toLowerCase()}-fill`;
+            
+            statusMeter.appendChild(statusFill);
+            
+            const statusValue = document.createElement('div');
+            statusValue.className = 'status-value pixel-text-small';
+            statusValue.textContent = value;
+            statusValue.id = `${label.toLowerCase()}-value`;
+            
+            statusBar.appendChild(statusLabel);
+            statusBar.appendChild(statusMeter);
+            statusBar.appendChild(statusValue);
+            
+            return statusBar;
+        }
+
+        // Update status bars
+        function updateStatusBars() {
+            document.getElementById('شجاعت-fill').style.width = `${playerStats.courage}%`;
+            document.getElementById('شجاعت-value').textContent = playerStats.courage;
+            
+            document.getElementById('دانش-fill').style.width = `${playerStats.wisdom}%`;
+            document.getElementById('دانش-value').textContent = playerStats.wisdom;
+            
+            document.getElementById('وفاداری-fill').style.width = `${playerStats.loyalty}%`;
+            document.getElementById('وفاداری-value').textContent = playerStats.loyalty;
+            
+            document.getElementById('تقدیر-fill').style.width = `${playerStats.fate}%`;
+            document.getElementById('تقدیر-value').textContent = playerStats.fate;
+        }
+
+        // Save game
+        function saveGame() {
+            const gameData = {
+                playerName: playerName,
+                playerStats: playerStats,
+                currentStoryId: currentStoryId,
+                storyHistory: storyHistory,
+                gameProgress: gameProgress,
+                timestamp: new Date().toISOString()
+            };
+            
+            localStorage.setItem('shahnameh8bit', JSON.stringify(gameData));
+            
+            // Show save notification
+            if (soundEnabled) {
+                playSound('save');
+            }
+            
+            // Temporary visual feedback
+            const saveMsg = document.createElement('div');
+            saveMsg.className = 'pixel-text-small';
+            saveMsg.style.color = '#00ff00';
+            saveMsg.textContent = 'بازی ذخیره شد!';
+            saveMsg.style.position = 'absolute';
+            saveMsg.style.bottom = '50px';
+            saveMsg.style.right = '10px';
+            saveMsg.style.animation = 'blink 1s';
+            
+            document.querySelector('.game-container').appendChild(saveMsg);
+            
+            setTimeout(() => {
+                saveMsg.remove();
+            }, 2000);
+        }
+
+        // Show main menu
+        function showMainMenu() {
+            gameScreen.classList.add('hidden');
+            mainMenu.classList.remove('hidden');
+        }
+
+        // Toggle sound
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const soundBtn = document.querySelector('.control-btn:nth-child(3)');
+            soundBtn.textContent = `صدا: ${soundEnabled ? 'روشن' : 'خاموش'}`;
+        }
+
+        // Play sound
+        function playSound(type) {
+            if (!soundEnabled) return;
+            
+            // In a real game, you would use actual sound files
+            // For this demo, we'll use simple beeps
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            if (type === 'click') {
+                const oscillator = audioContext.createOscillator();
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                oscillator.connect(audioContext.destination);
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.1);
+            } else if (type === 'save') {
+                const oscillator = audioContext.createOscillator();
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(1200, audioContext.currentTime);
+                oscillator.connect(audioContext.destination);
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.2);
+            }
+        }
+
+        // Show settings (simplified for 8-bit)
+        function showSettings() {
+            alert('تنظیمات:\n- جهت تغییر صدا از دکمه "صدا" در بازی استفاده کنید\n- بازی به طور خودکار ذخیره می‌شود');
+        }
+
+        // Show credits
+        function showCredits() {
+            alert('سازندگان:\n- توسعه: تیم شاهنامه 8 بیتی\n- بر اساس شاهنامه فردوسی\n- © 2023 تمامی حقوق محفوظ است');
+        }
+
+        // Exit game
+        function exitGame() {
+            if (confirm('آیا مطمئن هستید که می‌خواهید از بازی خارج شوید؟')) {
+                // In a real game, you might want to save here
+                window.close();
+                
+                // If window.close doesn't work (in some browsers)
+                if (!window.closed) {
+                    alert('برای خروج، پنجره مرورگر را ببندید.');
+                }
+            }
+        }
+
+        // Initialize the game when page loads
+        window.onload = initGame;
+    </script>
+</body>
+</html>

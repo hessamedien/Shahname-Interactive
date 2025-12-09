@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legend of Rostam</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Press Start 2P', cursive, Arial, sans-serif;
+            image-rendering: pixelated;
+        }
+
+        body {
+            background-color: #1a1a2e;
+            color: #e6e6e6;
+            overflow: hidden;
+        }
+
+        /* Screen Container */
+        .screen {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s;
+        }
+
+        /* Loading Screen */
+        #loading-screen {
+            background: linear-gradient(to bottom, #0f3460, #1a1a2e);
+            z-index: 100;
+        }
+
+        .loading-container {
+            text-align: center;
+        }
+
+        .game-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #f8b500;
+            text-shadow: 4px 4px 0 #000;
+            animation: pulse 2s infinite;
+        }
+
+        .loading-bar {
+            width: 300px;
+            height: 20px;
+            background-color: #333;
+            border: 3px solid #000;
+            margin: 20px auto;
+            overflow: hidden;
+        }
+
+        .loading-progress {
+            height: 100%;
+            width: 0%;
+            background-color: #f8b500;
+            transition: width 0.3s;
+        }
+
+        .loading-text {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: #ccc;
+        }
+
+        .developer {
+            position: absolute;
+            bottom: 20px;
+            font-size: 0.7rem;
+            color: #888;
+        }
+
+        /* Menu Screen */
+        #menu-screen {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%231a1a2e"/><path d="M0,0 L100,100 M100,0 L0,100" stroke="%230f3460" stroke-width="1"/></svg>');
+            background-size: 50px;
+        }
+
+        .menu-container {
+            background-color: rgba(15, 52, 96, 0.8);
+            border: 4px solid #f8b500;
+            padding: 2rem;
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .menu-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #f8b500;
+            text-shadow: 3px 3px 0 #000;
+        }
+
+        .menu-options {
+            list-style: none;
+            margin: 2rem 0;
+        }
+
+        .menu-option {
+            margin: 1rem 0;
+            padding: 0.8rem;
+            background-color: #1a1a2e;
+            border: 2px solid #000;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #e6e6e6;
+        }
+
+        .menu-option:hover {
+            background-color: #f8b500;
+            color: #1a1a2e;
+            transform: scale(1.05);
+        }
+
+        /* Settings Screen */
+        .settings-container {
+            background-color: rgba(15, 52, 96, 0.9);
+            border: 4px solid #f8b500;
+            padding: 2rem;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .settings-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #f8b500;
+            text-align: center;
+        }
+
+        .setting {
+            margin: 1rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-button {
+            margin-top: 1.5rem;
+            padding: 0.5rem 1rem;
+            background-color: #1a1a2e;
+            border: 2px solid #000;
+            color: #e6e6e6;
+            cursor: pointer;
+        }
+
+        /* About Screen */
+        .about-container {
+            background-color: rgba(15, 52, 96, 0.9);
+            border: 4px solid #f8b500;
+            padding: 2rem;
+            width: 80%;
+            max-width: 600px;
+            text-align: left;
+            line-height: 1.6;
+        }
+
+        .about-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #f8b500;
+            text-align: center;
+        }
+
+        .about-text {
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+        }
+
+        /* Game Screen */
+        #game-screen {
+            background-color: #1a1a2e;
+            justify-content: flex-start;
+            padding-top: 20px;
+        }
+
+        .game-ui {
+            width: 800px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 0 10px;
+        }
+
+        .health-bar {
+            display: flex;
+            align-items: center;
+        }
+
+        .health-hearts {
+            display: flex;
+        }
+
+        .heart {
+            width: 20px;
+            height: 20px;
+            background-color: #ff0000;
+            margin: 0 2px;
+            clip-path: polygon(50% 0%, 100% 35%, 82% 100%, 50% 80%, 18% 100%, 0% 35%);
+        }
+
+        .game-canvas-container {
+            position: relative;
+        }
+
+        #game-canvas {
+            border: 4px solid #f8b500;
+            background-color: #0f3460;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Hidden class */
+        .hidden {
+            display: none;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="screen">
+        <div class="loading-container">
+            <h1 class="game-title">LEGEND OF ROSTAM</h1>
+            <div class="loading-bar">
+                <div class="loading-progress" id="loading-progress"></div>
+            </div>
+            <div class="loading-text" id="loading-text">Loading Game Assets...</div>
+        </div>
+        <div class="developer">Developed by Hessamedien</div>
+    </div>
+
+    <!-- Menu Screen -->
+    <div id="menu-screen" class="screen hidden">
+        <div class="menu-container">
+            <h1 class="menu-title">LEGEND OF ROSTAM</h1>
+            <ul class="menu-options">
+                <li class="menu-option" id="start-game">Start Game</li>
+                <li class="menu-option" id="settings">Settings</li>
+                <li class="menu-option" id="about">About</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Settings Screen -->
+    <div id="settings-screen" class="screen hidden">
+        <div class="settings-container">
+            <h2 class="settings-title">SETTINGS</h2>
+            <div class="setting">
+                <span>Music Volume</span>
+                <input type="range" min="0" max="100" value="80">
+            </div>
+            <div class="setting">
+                <span>Sound Effects</span>
+                <input type="range" min="0" max="100" value="90">
+            </div>
+            <div class="setting">
+                <span>Difficulty</span>
+                <select>
+                    <option>Easy</option>
+                    <option selected>Normal</option>
+                    <option>Hard</option>
+                </select>
+            </div>
+            <button class="back-button" id="settings-back">Back to Menu</button>
+        </div>
+    </div>
+
+    <!-- About Screen -->
+    <div id="about-screen" class="screen hidden">
+        <div class="about-container">
+            <h2 class="about-title">ABOUT LEGEND OF ROSTAM</h2>
+            <p class="about-text">
+                "Legend of Rostam" is an 8-bit adventure game inspired by the epic stories from the Shahnameh (The Book of Kings), 
+                the Persian epic poem written by Ferdowsi.
+            </p>
+            <p class="about-text">
+                You play as Rostam, the greatest hero of Persian mythology, on a quest to rescue the king from the clutches of evil forces. 
+                Battle mythical creatures, solve ancient puzzles, and restore peace to the kingdom.
+            </p>
+            <p class="about-text">
+                This game features classic 8-bit graphics and gameplay reminiscent of the SNES era, with a unique Persian mythology theme.
+            </p>
+            <p class="about-text">
+                Developed by: Hessamedien
+            </p>
+            <button class="back-button" id="about-back">Back to Menu</button>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen hidden">
+        <div class="game-ui">
+            <div class="health-bar">
+                <span>HEALTH:</span>
+                <div class="health-hearts">
+                    <div class="heart"></div>
+                    <div class="heart"></div>
+                    <div class="heart"></div>
+                    <div class="heart"></div>
+                    <div class="heart"></div>
+                </div>
+            </div>
+            <div class="score">SCORE: 00000</div>
+        </div>
+        <div class="game-canvas-container">
+            <canvas id="game-canvas" width="800" height="500"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Game Variables
+        let currentScreen = 'loading';
+        let loadingProgress = 0;
+        let player = {
+            x: 400,
+            y: 250,
+            width: 32,
+            height: 32,
+            speed: 3,
+            health: 5
+        };
+        let keys = {};
+        let gameRunning = false;
+
+        // DOM Elements
+        const loadingScreen = document.getElementById('loading-screen');
+        const menuScreen = document.getElementById('menu-screen');
+        const settingsScreen = document.getElementById('settings-screen');
+        const aboutScreen = document.getElementById('about-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const loadingProgressBar = document.getElementById('loading-progress');
+        const loadingText = document.getElementById('loading-text');
+        const startButton = document.getElementById('start-game');
+        const settingsButton = document.getElementById('settings');
+        const aboutButton = document.getElementById('about');
+        const settingsBackButton = document.getElementById('settings-back');
+        const aboutBackButton = document.getElementById('about-back');
+        const gameCanvas = document.getElementById('game-canvas');
+        const ctx = gameCanvas.getContext('2d');
+
+        // Switch Screen Function
+        function switchScreen(screenName) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.add('hidden');
+            });
+            
+            // Show the requested screen
+            document.getElementById(`${screenName}-screen`).classList.remove('hidden');
+            currentScreen = screenName;
+            
+            // If switching to game screen, start the game loop
+            if (screenName === 'game' && !gameRunning) {
+                gameRunning = true;
+                gameLoop();
+            }
+        }
+
+        // Loading Simulation
+        function simulateLoading() {
+            const loadingInterval = setInterval(() => {
+                loadingProgress += Math.random() * 10;
+                if (loadingProgress > 100) {
+                    loadingProgress = 100;
+                    clearInterval(loadingInterval);
+                    setTimeout(() => {
+                        switchScreen('menu');
+                    }, 500);
+                }
+                
+                loadingProgressBar.style.width = `${loadingProgress}%`;
+                
+                // Update loading text based on progress
+                if (loadingProgress < 30) {
+                    loadingText.textContent = "Loading Game Assets...";
+                } else if (loadingProgress < 60) {
+                    loadingText.textContent = "Initializing Game World...";
+                } else if (loadingProgress < 90) {
+                    loadingText.textContent = "Loading Shahnameh Stories...";
+                } else {
+                    loadingText.textContent = "Almost Ready...";
+                }
+            }, 200);
+        }
+
+        // Draw Player
+        function drawPlayer() {
+            ctx.fillStyle = '#f8b500';
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+            
+            // Draw simple face/details
+            ctx.fillStyle = '#000';
+            ctx.fillRect(player.x + 8, player.y + 8, 4, 4); // Left eye
+            ctx.fillRect(player.x + 20, player.y + 8, 4, 4); // Right eye
+            ctx.fillRect(player.x + 10, player.y + 20, 12, 4); // Mouth
+        }
+
+        // Draw Game World
+        function drawGameWorld() {
+            // Draw background (simple grid pattern)
+            ctx.fillStyle = '#0f3460';
+            ctx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+            
+            // Draw some simple terrain
+            ctx.fillStyle = '#2a9d8f';
+            for (let i = 0; i < 10; i++) {
+                ctx.fillRect(i * 80, 400, 60, 100);
+            }
+            
+            // Draw some trees/obstacles
+            ctx.fillStyle = '#8b4513';
+            ctx.fillRect(100, 350, 20, 50);
+            ctx.fillRect(300, 350, 20, 50);
+            ctx.fillRect(500, 350, 20, 50);
+            ctx.fillRect(700, 350, 20, 50);
+            
+            ctx.fillStyle = '#2e8b57';
+            ctx.beginPath();
+            ctx.arc(110, 340, 25, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(310, 340, 25, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(510, 340, 25, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(710, 340, 25, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // Game Loop
+        function gameLoop() {
+            if (!gameRunning) return;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+            
+            // Draw game world
+            drawGameWorld();
+            
+            // Update player position based on keys
+            if (keys['ArrowUp'] && player.y > 0) {
+                player.y -= player.speed;
+            }
+            if (keys['ArrowDown'] && player.y < gameCanvas.height - player.height) {
+                player.y += player.speed;
+            }
+            if (keys['ArrowLeft'] && player.x > 0) {
+                player.x -= player.speed;
+            }
+            if (keys['ArrowRight'] && player.x < gameCanvas.width - player.width) {
+                player.x += player.speed;
+            }
+            
+            // Draw player
+            drawPlayer();
+            
+            // Continue game loop
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Event Listeners
+        document.addEventListener('keydown', (e) => {
+            keys[e.key] = true;
+        });
+
+        document.addEventListener('keyup', (e) => {
+            keys[e.key] = false;
+        });
+
+        startButton.addEventListener('click', () => {
+            switchScreen('game');
+        });
+
+        settingsButton.addEventListener('click', () => {
+            switchScreen('settings');
+        });
+
+        aboutButton.addEventListener('click', () => {
+            switchScreen('about');
+        });
+
+        settingsBackButton.addEventListener('click', () => {
+            switchScreen('menu');
+        });
+
+        aboutBackButton.addEventListener('click', () => {
+            switchScreen('menu');
+        });
+
+        // Start the loading simulation when page loads
+        window.addEventListener('load', simulateLoading);
+    </script>
+</body>
+</html>
